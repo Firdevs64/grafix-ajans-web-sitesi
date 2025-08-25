@@ -1,6 +1,6 @@
 # GRAFİx AJANS - Profesyonel Reklam Ajansı Web Sitesi
 
-Bu proje, modern ve responsive bir reklam ajansı web sitesi için oluşturulmuştur. Grafiker.com.tr sitesine benzer profesyonel bir tasarım ile mobil uyumlu ve kullanıcı dostu bir deneyim sunar.
+Bu proje, modern ve responsive bir reklam ajansı web sitesi için oluşturulmuştur.Profesyonel bir tasarım ile mobil uyumlu ve kullanıcı dostu bir deneyim sunar.
 
 ## 🚀 Özellikler
 
