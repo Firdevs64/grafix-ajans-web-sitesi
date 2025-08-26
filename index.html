@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Uşak Reklam Ajansı | GRAFİx AJANS - Profesyonel Reklam Ajansı</title>
+        <meta name="description" content="Uşak'ta profesyonel reklam çözümleri: tabela, totem, dijital baskı, araç kaplama ve daha fazlası. GRAFİx AJANS ile markanızı öne çıkarın.">
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+      
+        <!-- Lightbox CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet" />
+      
+        <!-- ✅ jQuery EKLENİYOR -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      
+        <!-- Lightbox JS -->
+        <script src="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/js/lightbox-plus-jquery.min.js"></script>
+        
+        <!-- EmailJS -->
+        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+      </head>
+      
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-top: 40px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo-img {
+            height: 80px;  /* boyutu ihtiyacına göre 50-70px yapabilirsin */
+            width: auto;
+            object-fit: contain;
+        }
+
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #ff6b35;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: 
+                linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)),
+                linear-gradient(45deg, #1a1a2e 0%, #16213e 25%, #0f3460 50%, #16213e 75%, #1a1a2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, #ff6b35 2px, transparent 2px),
+                radial-gradient(circle at 80% 20%, #28a745 1px, transparent 1px),
+                radial-gradient(circle at 40% 70%, #fbbf24 1.5px, transparent 1.5px),
+                radial-gradient(circle at 90% 80%, #ff6b35 1px, transparent 1px),
+                radial-gradient(circle at 10% 90%, #28a745 2px, transparent 2px),
+                radial-gradient(circle at 70% 60%, #fbbf24 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,107,53,0.1) 0%, transparent 20%, transparent 80%, rgba(40,167,69,0.1) 100%),
+                linear-gradient(0deg, rgba(251,191,36,0.05) 0%, transparent 50%, rgba(255,107,53,0.05) 100%);
+            background-size: 200px 200px, 150px 150px, 300px 300px, 100px 100px, 250px 250px, 180px 180px, 100% 100%, 100% 100%;
+            animation: cityLights 4s ease-in-out infinite alternate;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        @keyframes cityLights {
+            0% {
+                background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0% 0%, 100% 0%, 0% 0%, 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%, 0% 100%, 100% 0%, 0% 0%, 100% 100%, 0% 100%, 100% 0%, 100% 100%;
+            }
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255, 107, 53, 0.15) 0%, rgba(40, 167, 69, 0.15) 100%);
+            z-index: 1;
+            animation: heroGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes heroGlow {
+            0% {
+                background: linear-gradient(45deg, rgba(255, 107, 53, 0.15) 0%, rgba(40, 167, 69, 0.15) 100%);
+            }
+            100% {
+                background: linear-gradient(45deg, rgba(40, 167, 69, 0.15) 0%, rgba(255, 107, 53, 0.15) 100%);
+            }
+        }
+
+        .hero-content {
+            z-index: 2;
+            position: relative;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            animation: slideInFromLeft 1.2s ease-out;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, #ff6b35, #fbbf24, #28a745);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 3rem;
+            animation: slideInFromRight 1.2s ease-out 0.3s both;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            line-height: 1.7;
+            font-weight: 300;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.2s ease-out 0.6s both;
+        }
+
+        .cta-button-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            padding: 20px 50px;
+            text-decoration: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            transition: all 0.4s;
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button-secondary {
+            display: inline-block;
+            background: transparent;
+            color: white;
+            padding: 20px 50px;
+            text-decoration: none;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: all 0.4s;
+            backdrop-filter: blur(10px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .cta-button-primary:hover::before {
+            left: 100%;
+        }
+
+        .cta-button-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.5);
+            background: linear-gradient(135deg, #e55a2e, #e08119);
+        }
+
+        .cta-button-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #ff6b35;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        section {
+            padding: 80px 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* About Section */
+        .about {
+            background: #f8f9fa;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .feature-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        /* Services Section */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 5px solid #ff6b35;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .service-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .service-card ul {
+            list-style: none;
+        }
+
+        .service-card li {
+            padding: 8px 0;
+            color: #666;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .service-card li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        /* Portfolio Section */
+        .portfolio {
+            background: #f8f9fa;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            height: 340px;
+            background: #ddd;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .portfolio-item:hover {
+            transform: scale(1.05);
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 30px 20px 20px;
+            transform: translateY(0);
+            transition: none;
+        }
+
+        .portfolio-overlay h3 {
+            margin-bottom: 5px;
+        }
+        .show-more-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .show-more-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff6b35;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .show-more-button:hover {
+            background-color: #e85c24;
+        }
+
+        .arrow {
+            margin-left: 8px;
+            font-size: 18px;
+        }
+
+
+        /* Testimonials Section */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .testimonial-content p {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-author h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .testimonial-author span {
+            color: #ff6b35;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c3e50;
+            color: #bdc3c7;
+            padding: 50px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: #ff6b35;
+        }
+
+        .footer-section p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #34495e;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: white;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+                padding: 20px 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cta-button-primary,
+            .cta-button-secondary {
+                padding: 16px 35px;
+                font-size: 1rem;
+            }
+
+            .logo-gra, .logo-fix {
+                font-size: 24px;
+            }
+
+            .logo-ajans {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                        <a href="index.html">
+                            <img src="images/grafix.png" alt="Grafix Ajans Logo" class="logo-img">
+                        </a>
+                    </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link">Anasayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#services" class="nav-link">Hizmetlerimiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="galeri.html" class="nav-link">Çalışmalarımız</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="iletisim.html" class="nav-link">İletişim</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title"><span class="highlight">HAYALİNİZDEKİ TASARIM BİZİMLE GERÇEK OLSUN</span></h1>
+            <p class="hero-subtitle">Profesyonel tasarım ve yenilikçi reklam çözümleriyle markanızı rakiplerinizden bir adım öne taşıyoruz. Tabela, totem, dijital baskı ve daha fazlasıyla görünürlüğünüzü maksimuma çıkarın.</p>
+            <div class="hero-buttons">
+                <a href="iletisim.html" class="cta-button-primary">PROJENİZİ BAŞLATIN</a>
+                <a href="#portfolio" class="cta-button-secondary">ÇALIŞMALARIMIZI İNCELEYİN</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>HAKKIMIZDA</h2>
+                <p>Reklam ve tanıtım sektörlerinde hizmet veriyoruz. Bizimle çalışan müşterilerimizin taleplerini net olarak tespit ettikten sonra çeşitli analizlerle reklam, pazarlama ve iletişim stratejileri oluşturuyoruz.</p>
+            </div>
+            <div class="about-features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>MEDYA PLANLAMA</h3>
+                    <p>İşletmenizi anlayarak rakip analizi yapıyor ve size özel planlama sunuyoruz.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>MEDYA SATIN ALMA</h3>
+                    <p>Markanız için en uygun reklam alanlarını sizin için ayırtıyoruz.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>MEDYA STRATEJİSİ</h3>
+                    <p>Sizin için en uygun reklam fikirleri, araçları ve çözümlerini sunuyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>HİZMETLERİMİZ</h2>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-print"></i>
+                    </div>
+                    <h3>UV BASKI</h3>
+                    <ul>
+                        <li>Yüksek Kaliteli UV Baskı</li>
+                        <li>İç ve Dış Mekan Baskılar</li>
+                        <li>Dayanıklı UV Mürekkep</li>
+                        <li>Çeşitli Malzeme Üzerine Baskı</li>
+                        <li>Hızlı Kuruma</li>
+                        <li>Uzun Ömürlü Sonuçlar</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-desktop"></i>
+                    </div>
+                    <h3>DİJİTAL BASKI</h3>
+                    <ul>
+                        <li>Büyük Format Dijital Baskı</li>
+                        <li>Vinyl & Branda Baskı</li>
+                        <li>One Way Vision Baskı</li>
+                        <li>Baskılı Duvar Kağıdı</li>
+                        <li>Folyo Baskı</li>
+                        <li>Özel Tasarım Baskılar</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3>IŞIKLI-IŞIKSIZ TABELA</h3>
+                    <ul>
+                        <li>LED Işıklı Tabelalar</li>
+                        <li>Işıksız Tabelalar</li>
+                        <li>Dekupe Tabela</li>
+                        <li>Kutu Harf Tabela</li>
+                        <li>Yol ve Çatı Tabelaları</li>
+                        <li>Yönlendirme Levhaları</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>PROMOSYON</h3>
+                    <ul>
+                        <li>Kurumsal Promosyon Ürünleri</li>
+                        <li>Kişiye Özel Promosyon</li>
+                        <li>Kalem, Ajanda, Defter</li>
+                        <li>Çanta, Şapka, T-shirt</li>
+                        <li>Kupa, Anahtarlık</li>
+                        <li>Usb Bellekler</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-sign"></i>
+                    </div>
+                    <h3>TOTEM</h3>
+                    <ul>
+                        <li>İç Mekan Totemler</li>
+                        <li>Dış Mekan Totemler</li>
+                        <li>LED Işıklı Totemler</li>
+                        <li>Özel Tasarım Totemler</li>
+                        <li>Yönlendirme Totemleri</li>
+                        <li>Kurumsal Totemler</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <h3>KUTU HARF</h3>
+                    <ul>
+                        <li>3D Kutu Harf</li>
+                        <li>Işıklı Kutu Harf</li>
+                        <li>Işıksız Kutu Harf</li>
+                        <li>Kabartma Kutu Harf</li>
+                        <li>Özel Tasarım Harfler</li>
+                        <li>Kurumsal Logo Harfleri</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>ARAÇ KAPLAMA</h3>
+                    <ul>
+                        <li>Tam Araç Kaplama</li>
+                        <li>Kısmi Araç Kaplama</li>
+                        <li>One Way Vision Kaplama</li>
+                        <li>Vinyl Araç Kaplama</li>
+                        <li>Özel Tasarım Kaplamalar</li>
+                        <li>Kurumsal Araç Kaplama</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h3>KİŞİYE ÖZEL PROMOSYON</h3>
+                    <ul>
+                        <li>Kişiselleştirilmiş Ürünler</li>
+                        <li>Özel Tasarım Promosyon</li>
+                        <li>Kurumsal Hediyeler</li>
+                        <li>Özel Gün Promosyonları</li>
+                        <li>Etkinlik Promosyonları</li>
+                        <li>Özel Sipariş Ürünler</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3>METAL MARKALAMA</h3>
+                    <ul>
+                        <li>Metal Üzerine Markalama</li>
+                        <li>Lazer Markalama</li>
+                        <li>Kimyasal Markalama</li>
+                        <li>Özel Metal İşlemleri</li>
+                        <li>Endüstriyel Markalama</li>
+                        <li>Kurumsal Metal Ürünler</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <div class="section-header">
+                <h2>ÇALIŞMALARIMIZ</h2>
+                <p>Markanızı görmek istediğiniz yeri siz belirleyin. İşte yaptığımız çalışmalardan bazıları…</p>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        
+                        <a href="images/ÇALIŞMALARIM/bozzade.jpg" data-lightbox="portfolio" data-title="BOZZADE TABELA">
+                            <img src="images/ÇALIŞMALARIM/bozzade.jpg" alt="BOZZADE TABELA"> 
+                        </a>
+                        <p>Işıklı Tabela & Dış Cephe</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">
+                        
+                        <a href="images/ÇALIŞMALARIM/mimar1.jpg" data-lightbox="portfolio" data-title="AHK MİMARLIK TABELA">
+                            <img src="images/ÇALIŞMALARIM/mimar1.jpg" alt="AHK MİMARLIK TABELA">
+                        </a>
+                        <p>Işıksız Tabela & Dış Cephe</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">          
+                        <a href="images/ÇALIŞMALARIM/finaloto.jpg" data-lightbox="portfolio" data-title="FINAL OTO">
+                            <img src="images/ÇALIŞMALARIM/finaloto.jpg" alt="FINAL OTO">
+                        </a>
+                        <p>Ford Özel Servisi</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">                   
+                        <a href="images/ÇALIŞMALARIM/omnikel1.jpg" data-lightbox="portfolio" data-title="Omnikel">
+                            <img src="images/ÇALIŞMALARIM/omnikel1.jpg" alt="Omnikel">
+                        </a>
+                        <p>Isı ve Enerji Sistemleri</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">                       
+                        <a href="images/ÇALIŞMALARIM/kebap1.jpg" data-lightbox="portfolio" data-title="BAY KEBAP REKLAM">
+                            <img src="images/ÇALIŞMALARIM/kebap1.jpg" alt="BAY KEBAP REKLAM">
+                        </a>
+                        <p>Dış Mekan Reklam Panosu</p>
+                    </div>
+                </div>
+                <div class="portfolio-item">
+                    <div class="portfolio-overlay">                       
+                        <a href="images/ÇALIŞMALARIM/kudra1.jpg" data-lightbox="portfolio" data-title="KUDRA Güzellik">
+                            <img src="images/ÇALIŞMALARIM/kudra1.jpg" alt="KUDRA Güzellik">
+                        </a>
+                        <p>Kendi Mutluluğunu Yarat</p>
+                    </div>
+                </div>
+                <div class="show-more-container">
+                    <a href="galeri.html" class="show-more-button">
+                      Daha Fazla Çalışmayı Gör
+                      <span class="arrow">→</span>
+                    </a>
+                  </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2>Değerli Yorumlarınız</h2>
+                <p>Sizlerden aldığımız geri bildirimler ile sürekli kendimizi geliştirdik ve geliştirmeye devam ediyoruz.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"İşletmemiz için tabela ve baskı yaptırdık.Çok güzel bir işti.Çok ilgiliydiler.Elinize sağlık grafix ajans👏"</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <h4>Firdevs Köse</h4>    
+                        <span>5/5</span>                    
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Dükkanım için tabela yaptırdım.Çok güzel temiz bir iş oldu.Elinize sağlık.Grafix ajansa teşekkürler.
+                    <div class="testimonial-author">
+                        <h4>Hayrettin Köse</h4>
+                        <span>5/5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>İLETİŞİM</h2>
+                <p>Projeleriniz için bizimle iletişime geçin.</p>
+            </div>
+            <div class="about-features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>ADRES</h3>
+                    <p>Sarayaltı, Celal Bayar Cd. no:84 iç kapı No:10, 64100 Merkez/Uşak</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>TELEFON</h3>
+                    <p>0533 251 74 70</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>E-POSTA</h3>
+                    <p>usakgrafiksajans@gmail.com</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <a href="index.html">
+                        <img src="images/grafix.png" alt="Grafix Ajans Logo" class="logo-img">
+                    </a>
+                    <p>Profesyonel reklam ve tanıtım çözümleri ile markanızı öne çıkarıyoruz.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Hızlı Linkler</h3>
+                    <ul>
+                        <li><a href="#home">Anasayfa</a></li>
+                        <li><a href="#about">Hakkımızda</a></li>
+                        <li><a href="#services">Hizmetlerimiz</a></li>
+                        <li><a href="galeri.html">Çalışmalarımız</a></li>
+                        <li><a href="iletisim.html">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Hizmetlerimiz</h3>
+                    <ul>
+                        <li>Işıklı/Işıksız Tabela</li>
+                        <li>Dijital Baskı</li>
+                        <li>Araç Kaplama</li>
+                        <li>Metal Markalama</li>
+                        <li>Kişiye Özel Promosyon Ürünleri</li>
+                        <li>Promosyon Ürünleri</li>
+                        <li>UV Baskı</li>
+                        <li>Kutu Harf</li>
+                        <li>Totem</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>İletişim</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Sarayaltı, Celal Bayar Cd. no:84 iç kapı No:10, 64100 Merkez/Uşak</p>
+                    <p><i class="fas fa-phone"></i> 0533 251 74 70</p>
+                    <p><i class="fas fa-envelope"></i> usakgrafiksajans@gmail.com</p>
+                    <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/grafix.ajans64/" target="_blank" style="color: #bdc3c7; text-decoration: none;">@grafix.ajans64</a></p>
+                    <p><i class="fas fa-clock"></i> Pazartesi - Pazar: 09:00 - 18:00</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 GRAFİx AJANS. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add scroll effect to header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = '#fff';
+                header.style.backdropFilter = 'none';
+            }
+        });
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Galeri | GRAFİx AJANS</title>
+   <!-- Font Awesome -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+        
+   <!-- Google Fonts -->
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+ 
+   <!-- Lightbox CSS -->
+   <link href="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/css/lightbox.min.css" rel="stylesheet" />
+ 
+   <!-- ✅ jQuery EKLENİYOR -->
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ 
+   <!-- Lightbox JS -->
+   <script src="https://cdn.jsdelivr.net/npm/lightbox2@2/dist/js/lightbox-plus-jquery.min.js"></script>
+   
+   <!-- EmailJS -->
+   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Header Styles */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            margin-bottom: 20px; /* Header ile altındaki içerik arasına boşluk */
+        }
+
+        .navbar {
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo-img {
+            height: 80px;  /* boyutu ihtiyacına göre 50-70px yapabilirsin */
+            width: auto;
+            object-fit: contain;
+        }
+
+
+        .nav-menu {
+          display: flex;
+          list-style: none;
+          gap: 2rem;
+          margin: 0;
+          padding: 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #ff6b35;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+    /* Gallery Header */
+    .gallery-header {
+      background: linear-gradient(135deg, #0f3460 0%, #28a745 100%);
+      color: white;
+      padding: 60px 20px 40px;
+      text-align: center;
+    }
+
+    .gallery-header h1 {
+      margin: 0 0 10px 0;
+      font-size: 2.5rem;
+    }
+
+    .gallery-header p {
+      margin: 0;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    /* Category Grid */
+    .category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /*5 sütun sabit*/
+  gap: 10px; /*Grid aralarını ayarlamak için kullanılır*/
+}
+
+.category-card {
+  position: relative;
+  border-radius: 0; /*kenarları keskin yap*/
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: none;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  aspect-ratio: 1 / 1; /* Kare kutu */
+}
+
+.category-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.category-card .overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+}
+
+.category-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.category-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+@media (max-width: 900px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr); /* tabletlerde 3 sütun */
+  }
+}
+
+@media (max-width: 600px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr); /* mobilde 2 sütun */
+  }
+}
+
+
+
+
+
+    /* Back Button */
+    .back-button {
+      background: #ff6b35;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin: 20px 0;
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: #e55a2b;
+      transform: translateY(-2px);
+    }
+
+    /* Gallery Grid */
+    .gallery-section {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: none;
+    }
+
+    .gallery-section.active {
+      display: block;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+    #videoModal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; 
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      z-index: 10000;
+
+      /* Flexbox ile ortalama */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column; /* Buton alt tarafta */
+      padding: 20px;
+      box-sizing: border-box;
+    }
+      #videoModal video {
+      max-width: 90vw;
+      max-height: 80vh;
+      border-radius: 8px;
+    }
+      #videoModal button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #ff6b35;
+      color: white;
+    }
+
+
+    /* Footer */
+    .footer {
+      background: #2c3e50;
+      color: #bdc3c7;
+      padding: 50px 0 20px;
+      margin-top: 60px;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .footer-section h3 {
+      color: #ecf0f1;
+      margin-bottom: 15px;
+    }
+
+    .footer-section p, .footer-section li {
+      margin-bottom: 8px;
+    }
+
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .footer-section a {
+      color: #bdc3c7;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-section a:hover {
+      color: #ff6b35;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 20px;
+      border-top: 1px solid #34495e;
+      margin-top: 30px;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 70px;
+        flex-direction: column;
+        background-color: white;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+        padding: 20px 0;
+      }
+
+      .nav-menu.active {
+        left: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+      }
+
+      .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .gallery {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+      }
+
+      .gallery-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                      <a href="index.html">
+                        <img src="images/grafix.png" alt="Grafix Ajans Logo" class="logo-img">
+                          </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Anasayfa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Hakkımızda</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Hizmetlerimiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">Çalışmalarımız</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="iletisim.html" class="nav-link">İletişim</a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Category Selection -->
+    <section class="category-section" id="categories">
+        <div class="category-grid">
+            <div class="category-card" onclick="showCategory('tabela')" style="background-image: url('images/kategori/kategoritabela.jpg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Işıklı/Işıksız Tabela</div>            
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('arac-kaplama')" style="background-image: url('images/kategori/kategoriarackaplama.jpeg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Araç Kaplama</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('dijital-baski')" style="background-image: url('images/kategori/kategoridijitalbaski.jpg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Dijital Baskı</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('promosyon')" style="background-image: url('images/kategori/kategoripromosyon.jpeg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Promosyon</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('kisisel-promosyon')" style="background-image: url('images/kategori/kategorikisiyepromosyon.jpg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Kişiye Özel Promosyon</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('metal-markalama')" style="background-image: url('images/kategori/kategorimetalmarkalama.jpg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Metal Markalama</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('kutu-harf')" style="background-image: url('images/kategori/kategorikutuharf.jpg')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Kutu Harf</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('uv-baski')" style="background-image: url('images/kategori/kategoriuvbaski.png')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">UV Baskı</div>
+                </div>
+            </div>
+            
+            <div class="category-card" onclick="showCategory('totem')" style="background-image: url('images/kategori/kategoritotem.webp')">
+              <div class="overlay"></div>
+                <div class="category-content">
+                    <div class="category-title">Totem</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Sections for each category -->
+    <section class="gallery-section" id="gallery-tabela">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Işıklı/Işıksız Tabela</h2>
+        <div class="gallery">
+          <div class="gallery-item">
+            <a href="images/ÇALIŞMALARIM/palmira.jpg" data-lightbox="tabela" data-title="Palmira Tabelası">
+                <img src="images/ÇALIŞMALARIM/palmira.jpg" alt="Palmira Tabelası">
+            </a>
+        </div>
+        <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/varol.jpg" data-lightbox="tabela" data-title="Varol Tabelası">
+              <img src="images/ÇALIŞMALARIM/varol.jpg" alt="Varol Tabelası">
+          </a>
+      </div>
+      <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/varol1.jpg" data-lightbox="tabela" data-title="Varol Tabelası">
+              <img src="images/ÇALIŞMALARIM/varol1.jpg" alt="Varol Tabelası">
+          </a>
+      </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/beyaz.jpg" data-lightbox="tabela" data-title="Beyaz Tabela">
+                    <img src="images/ÇALIŞMALARIM/beyaz.jpg" alt="Beyaz Tabela">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/beyaz1.jpg" data-lightbox="tabela" data-title="Beyaz Tabela">
+                    <img src="images/ÇALIŞMALARIM/beyaz1.jpg" alt="Beyaz Tabela">
+                </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/anaokulu.jpg" data-lightbox="tabela" data-title="Anaokulu Tabelası">
+                  <img src="images/ÇALIŞMALARIM/anaokulu.jpg" alt="Anaokulu Tabelası">
+              </a>
+          </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/çevsa1.jpg" data-lightbox="tabela" data-title="Çevsa Tabelası">
+                    <img src="images/ÇALIŞMALARIM/çevsa1.jpg" alt="Çevsa Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/finaloto.jpg" data-lightbox="tabela" data-title="Final Oto Tabelası">
+                    <img src="images/ÇALIŞMALARIM/finaloto.jpg" alt="Final Oto Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/mimar1.jpg" data-lightbox="tabela" data-title="Mimar Tabelası">
+                    <img src="images/ÇALIŞMALARIM/mimar1.jpg" alt="Mimar Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/mimar2.jpg" data-lightbox="tabela" data-title="Mimar Tabelası">
+                    <img src="images/ÇALIŞMALARIM/mimar2.jpg" alt="Mimar Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/okul2.jpg" data-lightbox="tabela" data-title="Okul Tabelası">
+                    <img src="images/ÇALIŞMALARIM/okul2.jpg" alt="Okul Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/soylu.jpg" data-lightbox="tabela" data-title="Soylu Tabelası">
+                    <img src="images/ÇALIŞMALARIM/soylu.jpg" alt="Soylu Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/soylu1.jpg" data-lightbox="tabela" data-title="Soylu Tabelası">
+                    <img src="images/ÇALIŞMALARIM/soylu1.jpg" alt="Soylu Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/soylu2.jpg" data-lightbox="tabela" data-title="Soylu Tabelası">
+                    <img src="images/ÇALIŞMALARIM/soylu2.jpg" alt="Soylu Tabelası">
+                </a>
+            </div>
+            <div class="gallery-item">
+                <a href="images/ÇALIŞMALARIM/turkcell.jpg" data-lightbox="tabela" data-title="Turkcell Tabelası">
+                    <img src="images/ÇALIŞMALARIM/turkcell.jpg" alt="Turkcell Tabelası">
+                </a>
+            </div>
+          <div class="gallery-item">
+            <a href="images/ÇALIŞMALARIM/erdil.jpg" data-lightbox="tabela" data-title="Erdil Restaurant Tabelası">
+                <img src="images/ÇALIŞMALARIM/erdil.jpg" alt="Erdil Restaurant Tabelası">
+            </a>
+        </div>
+        <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/erdil1.jpg" data-lightbox="tabela" data-title="Erdil Restaurant Tabelası">
+              <img src="images/ÇALIŞMALARIM/erdil1.jpg" alt="Erdil Restaurant Tabelası">
+          </a>
+      </div>
+<div class="gallery-item">
+    <a href="images/ÇALIŞMALARIM/bozzade2.jpg" data-lightbox="tabela" data-title="Bozzade Tabela">
+        <img src="images/ÇALIŞMALARIM/bozzade2.jpg" alt="Bozzade Tabela">
+    </a>
+</div>
+<div class="gallery-item">
+  <a href="#" onclick="document.getElementById('videoModal').style.display='flex'; return false;">
+    <img src="images/ÇALIŞMALARIM/bozzade-thumbnail.png" alt="Bozzade Tabela">
+  </a>
+</div>
+
+<div id="videoModal" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.8);
+    z-index:10000;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+">
+  <video controls autoplay muted style="max-width:90%; max-height:80%;">
+    <source src="images/ÇALIŞMALARIM/bozzadetabela.mp4" type="video/mp4">
+    Tarayıcınız video etiketini desteklemiyor.
+  </video>
+  <button onclick="document.getElementById('videoModal').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+</div>
+</div>
+
+        </div>
+    </section>
+
+    <!-- Diğer kategoriler için boş gallery section'lar -->
+    <section class="gallery-section" id="gallery-arac-kaplama">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Araç Kaplama</h2>
+        <div class="gallery">
+          <div class="gallery-item">
+            <a href="images/ÇALIŞMALARIM/birlik1.png" data-lightbox="arac-kaplama" data-title="Birlik Yemek">
+                <img src="images/ÇALIŞMALARIM/birlik1.png" alt="Birlik Yemek">
+            </a>
+        </div>
+        <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/birlik2.jpg" data-lightbox="arac-kaplama" data-title="Birlik Yemek">
+              <img src="images/ÇALIŞMALARIM/birlik2.jpg" alt="Birlik Yemek">
+          </a>
+      </div>
+      <div class="gallery-item">
+        <a href="images/ÇALIŞMALARIM/birlik3.jpg" data-lightbox="arac-kaplama" data-title="Birlik Yemek">
+            <img src="images/ÇALIŞMALARIM/birlik3.jpg" alt="Birlik Yemek">
+        </a>
+    </div>
+    <div class="gallery-item">
+      <a href="images/ÇALIŞMALARIM/birlik4.jpg" data-lightbox="arac-kaplama" data-title="Birlik Yemek">
+          <img src="images/ÇALIŞMALARIM/birlik4.jpg" alt="Birlik Yemek">
+      </a>
+  </div>
+  <div class="gallery-item">
+    <a href="images/ÇALIŞMALARIM/omnikel1.jpg" data-lightbox="arac-kaplama" data-title="Omnikel">
+        <img src="images/ÇALIŞMALARIM/omnikel1.jpg" alt=Omnikel">
+    </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/omnikel2.jpg" data-lightbox="arac-kaplama" data-title="Omnikel">
+      <img src="images/ÇALIŞMALARIM/omnikel2.jpg" alt="Omnikel">
+  </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/motor1.jpg" data-lightbox="arac-kaplama" data-title="Motorsiklet Kaplama">
+      <img src="images/ÇALIŞMALARIM/motor1.jpg" alt="Motorsiklet Kaplama">
+  </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/motor2.jpg" data-lightbox="arac-kaplama" data-title="Motorsiklet Kaplama">
+      <img src="images/ÇALIŞMALARIM/motor2.jpg" alt="Motorsiklet Kaplama">
+  </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/motor3.jpg" data-lightbox="arac-kaplama" data-title="Motorsiklet Kaplama">
+      <img src="images/ÇALIŞMALARIM/motor3.jpg" alt="Motorsiklet Kaplama">
+  </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/kgm.jpg" data-lightbox="arac-kaplama" data-title="Kgm Petrol">
+      <img src="images/ÇALIŞMALARIM/kgm.jpg" alt="Kgm Petrol">
+  </a>
+</div>
+<div class="gallery-item">
+  <a href="images/ÇALIŞMALARIM/kgm1.jpg" data-lightbox="arac-kaplama" data-title="Kgm Petrol">
+      <img src="images/ÇALIŞMALARIM/kgm1.jpg" alt="Kgm Petrol">
+  </a>
+</div>
+
+<div class="gallery-item">
+  <a href="#" onclick="document.getElementById('videoModal8').style.display='flex'; return false;">
+    <img src="images/ÇALIŞMALARIM/kgm2-thumbnail.jpg" alt="Kgm Petrol">
+  </a>
+</div>
+
+<div id="videoModal8" style="
+    display:none;
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.8);
+    z-index:10000;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+">
+  <video controls autoplay muted style="max-width:90%; max-height:80%;">
+    <source src="images/ÇALIŞMALARIM/kgm2.mp4" type="video/mp4">
+    Tarayıcınız video etiketini desteklemiyor.
+  </video>
+  <button onclick="document.getElementById('videoModal8').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+</div>
+</div>
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-dijital-baski">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Dijital Baskı</h2>
+        <div class="gallery">
+            <!-- Dijital baskı fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/süt.jpg" data-lightbox="dijital-baski" data-title="Duvar Kağıdı">
+                  <img src="images/ÇALIŞMALARIM/süt.jpg" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/süt1.jpg" data-lightbox="dijital-baski" data-title="Duvar Kağıdı">
+                  <img src="images/ÇALIŞMALARIM/süt1.jpg" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/uzman.jpg" data-lightbox="dijital-baski" data-title="Duvar Kağıdı">
+                  <img src="images/ÇALIŞMALARIM/uzman.jpg" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/amcam3.jpg" data-lightbox="dijital-baski" data-title="Duvar Kağıdı">
+                  <img src="images/ÇALIŞMALARIM/amcam3.jpg" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal1').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/grafix-thumbnail.png" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            
+            <div id="videoModal1" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/grafixajansbaskı.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal1').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div>
+            
+            
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal2').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/bozzade-thumbnail.png" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            
+            <div id="videoModal2" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/bozzadekünefevideo.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal2').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div>
+            
+            
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal3').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/folyobaskı-thumbnail.png" alt="Duvar Kağıdı">
+              </a>
+            </div>
+            
+            <div id="videoModal3" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/dijitalbaskı1.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal3').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div>  
+                      
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-promosyon">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Promosyon</h2>
+        <div class="gallery">
+            <!-- Promosyon fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/kuzu.jpg" data-lightbox="promosyon" data-title="Promosyon Ürünler">
+                  <img src="images/ÇALIŞMALARIM/kuzu.jpg" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/kuzu1.jpg" data-lightbox="promosyon" data-title="Promosyon Ürünler">
+                  <img src="images/ÇALIŞMALARIM/kuzu1.jpg" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/kuzu2.jpg" data-lightbox="promosyon" data-title="Promosyon Ürünler">
+                  <img src="images/ÇALIŞMALARIM/kuzu2.jpg" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal4').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/kayaçakmak-thumbnail.png" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            
+            <div id="videoModal4" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/kayaçakmakvideo.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal4').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal5').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/kudraçakmak-thumbnail.png" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            
+            <div id="videoModal5" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/kudraçakmakvideo.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal5').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-kisisel-promosyon">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Kişiye Özel Promosyon</h2>
+        <div class="gallery">
+            <!-- Kişiye özel promosyon fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/oyun.jpg" data-lightbox="kisisel-promosyon" data-title="Kişiye Özel Promosyon Ürünler">
+                  <img src="images/ÇALIŞMALARIM/oyun.jpg" alt="Kişiye Özel Promosyon Ürünler">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/patron.jpg" data-lightbox="kisisel-promosyon" data-title="Kişiye Özel Promosyon Ürünler">
+                  <img src="images/ÇALIŞMALARIM/patron.jpg" alt="Kişiye Özel Promosyon Ürünler">
+              </a>
+            </div>
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal6').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/tablo-thumbnail.png" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            
+            <div id="videoModal6" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/tablovideo.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal6').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal20').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/oyun.jpg" alt="Promosyon Ürünler">
+              </a>
+            </div>
+            
+            <div id="videoModal20" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/amongusvideo.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal20').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-metal-markalama">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Metal Markalama</h2>
+        <div class="gallery">
+            <!-- Metal markalama fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal21').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/bıçak-thumbnail.png" alt="Lazer Markalama">
+              </a>
+            </div>
+            
+            <div id="videoModal21" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/bıçakvideo2.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal21').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+            <div class="gallery-item">
+              <a href="#" onclick="document.getElementById('videoModal7').style.display='flex'; return false;">
+                <img src="images/ÇALIŞMALARIM/bıçak1-thumbnail.png" alt="Lazer Markalama">
+              </a>
+            </div>
+            
+            <div id="videoModal7" style="
+                display:none;
+                position:fixed;
+                top:0; left:0;
+                width:100%; height:100%;
+                background:rgba(0,0,0,0.8);
+                z-index:10000;
+                justify-content:center;
+                align-items:center;
+                flex-direction:column;
+            ">
+              <video controls autoplay muted style="max-width:90%; max-height:80%;">
+                <source src="images/ÇALIŞMALARIM/bıçakvideo1.mp4" type="video/mp4">
+                Tarayıcınız video etiketini desteklemiyor.
+              </video>
+              <button onclick="document.getElementById('videoModal7').style.display='none'" style="margin-top:15px; padding:10px 20px; font-size:16px;">Kapat</button>
+            </div> 
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-kutu-harf">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Kutu Harf</h2>
+        <div class="gallery">
+            <!-- Kutu harf fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/birevim.jpg" data-lightbox="kutu-harf" data-title="Kutu Harf Tabela">
+                  <img src="images/ÇALIŞMALARIM/birevim.jpg" alt="Kutu Harf Tabela">
+              </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-uv-baski">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">UV Baskı</h2>
+        <div class="gallery">
+            <!-- UV baskı fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+                <p style="text-align: center; padding: 50px; color: #666;">Bu kategoride henüz fotoğraf bulunmamaktadır.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gallery-section" id="gallery-totem">
+        <button class="back-button" onclick="showCategories()">← Kategorilere Dön</button>
+        <h2 style="text-align: center; margin-bottom: 30px; color: #0f3460;">Totem</h2>
+        <div class="gallery">
+            <!-- Totem fotoğraflarını buraya ekleyin -->
+            <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/bozzade.jpg" data-lightbox="totem" data-title="Bozzade Totem">
+                  <img src="images/ÇALIŞMALARIM/bozzade.jpg" alt="Bozzade Totem">
+              </a>
+          </div>
+          <div class="gallery-item">
+              <a href="images/ÇALIŞMALARIM/bozzade1.jpg" data-lightbox="totem" data-title="Bozzade Totem">
+                  <img src="images/ÇALIŞMALARIM/bozzade1.jpg" alt="Bozzade Totem">
+              </a>
+          </div>
+          <div class="gallery-item">
+            <a href="images/ÇALIŞMALARIM/kebap1.jpg" data-lightbox="totem" data-title="Bey Kebap Totem">
+                <img src="images/ÇALIŞMALARIM/kebap1.jpg" alt="Bey Kebap Totem">
+            </a>
+        </div>
+        <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/aile.jpg" data-lightbox="totem" data-title="Totem">
+              <img src="images/ÇALIŞMALARIM/aile.jpg" alt="Totem">
+          </a>
+      </div>
+      <div class="gallery-item">
+          <a href="images/ÇALIŞMALARIM/kudra2.jpg" data-lightbox="totem" data-title="Kudra Güzellik Totem">
+              <img src="images/ÇALIŞMALARIM/kudra2.jpg" alt="Kudra Güzellik Totem ">
+          </a>
+      </div>
+      <div class="gallery-item">
+        <a href="images/ÇALIŞMALARIM/kudra1.jpg" data-lightbox="totem" data-title="Kudra Güzellik Totem">
+            <img src="images/ÇALIŞMALARIM/kudra1.jpg" alt="Kudra Güzellik Totem ">
+        </a>
+    </div>
+      <div class="gallery-item">
+        <a href="images/ÇALIŞMALARIM/karşıda.jpg" data-lightbox="totem" data-title="Totem">
+            <img src="images/ÇALIŞMALARIM/karşıda.jpg" alt="Totem">
+        </a>
+    </div>
+      <div class="gallery-item">
+        <a href="images/ÇALIŞMALARIM/çevsa2.jpg" data-lightbox="totem" data-title="Çevsa Totem">
+            <img src="images/ÇALIŞMALARIM/çevsa2.jpg" alt="Çevsa Totem">
+        </a>
+    </div>
+    </section>
+
+                    <!-- Footer -->
+                    <footer class="footer">
+                        <div class="container">
+                            <div class="footer-content">
+                                <div class="footer-section">
+                                  <a href="index.html">
+                                    <img src="images/grafix.png" alt="Grafix Ajans Logo" class="logo-img">
+                                </a>
+                                <p>Profesyonel reklam ve tanıtım çözümleri ile markanızı öne çıkarıyoruz.</p>
+                                </div>
+                                <div class="footer-section">
+                                    <h3>Hızlı Linkler</h3>
+                                    <ul>
+                                        <li><a href="index.html">Anasayfa</a></li>
+                                        <li><a href="index.html">Hakkımızda</a></li>
+                                        <li><a href="index.html">Hizmetlerimiz</a></li>
+                                        <li><a href="galeri.html">Çalışmalarımız</a></li>
+                                        <li><a href="iletisim.html">İletişim</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-section">
+                                    <h3>Hizmetlerimiz</h3>
+                                    <ul>
+                                      <li>Işıklı/Işıksız Tabela</li>
+                                      <li>Dijital Baskı</li>
+                                      <li>Araç Kaplama</li>
+                                      <li>Metal Markalama</li>
+                                      <li>Kişiye Özel Promosyon Ürünleri</li>
+                                      <li>Promosyon Ürünleri</li>
+                                      <li>UV Baskı</li>
+                                      <li>Kutu Harf</li>
+                                      <li>Totem</li>
+                                    </ul>
+                                </div>
+                                <div class="footer-section">
+                                    <h3>İletişim</h3>
+                                    <p><i class="fas fa-map-marker-alt"></i> Sarayaltı, Celal Bayar Cd. no:84 iç kapı No:10, 64100 Merkez/Uşak</p>
+                                    <p><i class="fas fa-phone"></i> 0533 251 74 70</p>
+                                    <p><i class="fas fa-envelope"></i> usakgrafiksajans@gmail.com</p>
+                                    <p><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/grafix.ajans64/" target="_blank" style="color: #bdc3c7; text-decoration: none;">@grafix.ajans64</a></p>
+                                    <p><i class="fas fa-clock"></i> Pazartesi - Pazar: 09:00 - 18:00</p>
+                                </div>
+                            </div>
+                            <div class="footer-bottom">
+                                <p>&copy; 2024 GRAFİx AJANS. Tüm hakları saklıdır.</p>
+                            </div>
+                        </div>
+                    </footer>
+
+                    <script>
+                        function showCategory(categoryId) {
+                          document.getElementById('categories').style.display = 'none';
+                      
+                          document.querySelectorAll('.gallery-section').forEach(section => {
+                            section.classList.remove('active');
+                          });
+                      
+                          document.getElementById(`gallery-${categoryId}`).classList.add('active');
+                        }
+                      
+                        function showCategories() {
+                          document.getElementById('categories').style.display = 'block';
+                      
+                          document.querySelectorAll('.gallery-section').forEach(section => {
+                            section.classList.remove('active');
+                          });
+                        }
+                      </script>
+                      <script>
+                        function openVideoModal() {
+                          document.getElementById('videoModal').style.display = 'block';
+                        }
+                        </script>
+                      <script>
+                        // Mobil menü toggle
+                        const hamburger = document.querySelector('.hamburger');
+                        const navMenu = document.querySelector('.nav-menu');
+                        
+                        hamburger.addEventListener('click', () => {
+                            hamburger.classList.toggle('active');
+                            navMenu.classList.toggle('active');
+                        });
+                        
+                        // Menü linklerine tıklandığında menüyü kapat
+                        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+                            hamburger.classList.remove('active');
+                            navMenu.classList.remove('active');
+                        }));
+                        </script>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+                        
+
+</body>
+</html>                                     
