@@ -159,15 +159,32 @@ document.querySelectorAll('.testimonial-card').forEach(card => {
     });
 });
 
-// Parallax effect for hero section
-window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    const hero = document.querySelector('.hero');
-    if (hero) {
-        const rate = scrolled * -0.5;
-        hero.style.transform = `translateY(${rate}px)`;
-    }
-});
+// Parallax: sadece tablet/desktop (mobilde kapalı)
+function applyParallax() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+
+  // Mobilde parallax kapalı
+  if (window.innerWidth < 992) {
+    hero.style.transform = 'none';
+    window.removeEventListener('scroll', parallaxHandler);
+    return;
+  }
+
+  // Desktop: parallax aktif
+  window.addEventListener('scroll', parallaxHandler);
+}
+
+function parallaxHandler() {
+  const hero = document.querySelector('.hero');
+  if (!hero) return;
+  const rate = window.pageYOffset * -0.5;
+  hero.style.transform = `translateY(${rate}px)`;
+}
+
+// İlk yüklemede ve boyut değişiminde uygula
+window.addEventListener('load', applyParallax);
+window.addEventListener('resize', applyParallax);
 
 // Active navigation link highlighting
 window.addEventListener('scroll', () => {
