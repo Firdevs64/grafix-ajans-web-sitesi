@@ -877,3 +877,24 @@ html {
         font-size: 1.5rem;
     }
 } 
+
+/* --- Mobile fixes: contact images + hero text --- */
+/* Prevent horizontal scroll and make images fit on mobile */
+.contact-hero-image { overflow: hidden; border-radius: 12px; }
+.contact-hero-image img,
+.contact img,
+section img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+/* Use object-fit so contact image behaves like background */
+@media (max-width: 768px) {
+	.contact-hero-image { height: 260px; }
+	.contact-hero-image img { width: 100%; height: 100%; object-fit: cover; }
+	/* Hero spacing so text doesn't clip under fixed header */
+	.hero { height: auto; padding: 110px 16px 60px; }
+	.hero-content { padding: 0; }
+	.hero-text h1 { font-size: 32px; line-height: 1.15; }
+	.hero-text p { font-size: 16px; }
+} 
