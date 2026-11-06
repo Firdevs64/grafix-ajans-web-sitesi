@@ -206,6 +206,64 @@
             .media-viewer-close { top: -36px; }
         }
 
+
+        .gallery-item > a { display:block; width:100%; height:100%; }
+        /* Mobile navigation and gallery layout */
+        .mobile-menu-toggle { display:none; border:0; background:transparent; color:var(--dark); font-size:1.55rem; cursor:pointer; padding:10px; }
+        @media (max-width: 850px) {
+            .header { padding: 6px 0; }
+            .header .inner { position:relative; }
+            .header .logo img { height:50px; max-width:145px; }
+            .mobile-menu-toggle { display:inline-flex; align-items:center; justify-content:center; }
+            .nav-links { display:none; position:absolute; top:calc(100% + 8px); left:0; right:0; background:white; border:1px solid #eee; border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.12); padding:14px; flex-direction:column; align-items:stretch; gap:0; }
+            .nav-links.is-open { display:flex; }
+            .nav-links a { display:block; padding:12px 14px; }
+            .nav-links .nav-cta { display:block; margin-top:8px; text-align:center; color:white; }
+            .page-hero { padding:115px 0 48px; }
+            .page-hero h1 { font-size:clamp(2rem,8vw,3rem); }
+            .page-hero p { font-size:1rem; }
+            .filters { padding:28px 0; gap:8px; }
+            .filter-btn { padding:9px 14px; font-size:.82rem; }
+            .gallery-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; padding-bottom:60px; }
+            .gallery-item { height:auto; aspect-ratio: 1 / 1; min-width:0; }
+            .container { padding:0 16px; }
+            .media-viewer-modal { padding:12px; }
+            .media-viewer-wrapper { width:100%; max-width:100%; height:min(75vh,580px); }
+            .media-viewer-arrow.prev { left:4px; }
+            .media-viewer-arrow.next { right:4px; }
+            .media-viewer-arrow { width:40px; height:40px; }
+        }
+        @media (max-width: 480px) {
+            .gallery-grid { grid-template-columns:1fr; gap:18px; }
+            .gallery-item { aspect-ratio: 4 / 3; }
+            .media-viewer-wrapper { height: min(68vh,500px); }
+        }
+
+/* Mobil galeri: daha kucuk ekranlarda kartlar ve filtreler */
+@media (max-width: 600px) {
+  .container {padding-left:16px;padding-right:16px;}
+  .page-hero {padding:115px 0 40px;}
+  .page-hero h1 {font-size:clamp(2rem,8vw,2.65rem);}
+  .page-hero p {font-size:.95rem;line-height:1.6;}
+  .filters {gap:8px;padding:28px 0;}
+  .filter-btn {font-size:.76rem;padding:9px 13px;min-height:40px;}
+  .gallery-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-bottom:55px;}
+  .gallery-item {height:auto;aspect-ratio:1/1;border-radius:12px;}
+  .gallery-item img,.gallery-item video {display:block;}
+  .footer-grid {gap:26px;}
+  .footer-bottom {justify-content:center;text-align:center;}
+  .media-viewer-modal {padding:10px;}
+  .media-viewer-wrapper {width:100%;max-width:100%;height:70dvh;max-height:70dvh;}
+  .media-viewer-arrow {width:38px;height:38px;top:50%;}
+  .media-viewer-arrow.prev {left:0;}
+  .media-viewer-arrow.next {right:0;}
+  .media-viewer-close {right:8px;top:-42px;}
+  .viewer-title {font-size:.8rem;}
+}
+@media (max-width: 380px) {
+  .gallery-grid {grid-template-columns:1fr;gap:14px;}
+  .gallery-item {aspect-ratio:4/3;}
+}
     </style>
 </head>
 <body>
@@ -213,7 +271,8 @@
         <div class="container">
             <div class="inner">
                 <a href="index.html" class="logo"><img src="images/grafix-logo.png" alt="Grafix Ajans"></a>
-                <ul class="nav-links">
+                <button class="mobile-menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false" aria-controls="primaryNav"><i class="fas fa-bars"></i></button>
+                <ul class="nav-links" id="primaryNav">
                     <li><a href="index.html#services">Hizmetlerimiz</a></li>
                     <li><a href="calismalarimiz.html" class="active">Çalışmalarımız</a></li>
                     <li><a href="index.html#refs">Referanslarımız</a></li>
@@ -906,6 +965,31 @@
             { file: 'şarkı.mp4', category: 'kisiyeozel' }
         ];
 
+
+        // Mobil menü: dar ekranlarda taşmayı önler.
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const primaryNav = document.getElementById('primaryNav');
+        mobileMenuToggle.addEventListener('click', () => {
+            const open = primaryNav.classList.toggle('is-open');
+            mobileMenuToggle.setAttribute('aria-expanded', String(open));
+            mobileMenuToggle.setAttribute('aria-label', open ? 'Menüyü kapat' : 'Menüyü aç');
+            mobileMenuToggle.querySelector('i').className = open ? 'fas fa-times' : 'fas fa-bars';
+        });
+        primaryNav.addEventListener('click', (event) => {
+            if (event.target.closest('a')) {
+                primaryNav.classList.remove('is-open');
+                mobileMenuToggle.setAttribute('aria-expanded','false');
+                mobileMenuToggle.querySelector('i').className = 'fas fa-bars';
+            }
+        });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 850) {
+                primaryNav.classList.remove('is-open');
+                mobileMenuToggle.setAttribute('aria-expanded','false');
+                mobileMenuToggle.querySelector('i').className = 'fas fa-bars';
+            }
+        });
+
         const galleryGrid = document.querySelector('.gallery-grid');
         const mediaDirectory = 'images/%C3%87ALI%C5%9EMALARIM/';
 
@@ -924,7 +1008,7 @@
                     }
                     observer.unobserve(video);
                 });
-            }, { rootMargin: '200px 0px', threshold: 0.01 })
+            }, { rootMargin: '70px 0px', threshold: 0.01 })
             : null;
 
         function watchVideoPreview(video) {

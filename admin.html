@@ -932,6 +932,43 @@
                 padding: 20px 16px;
             }
         }
+
+/* Yönetici paneli mobil kullanım düzeni */
+@media (max-width: 900px) {
+ .stats-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .works-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+ .card {padding:22px 18px;}
+ .filter-controls {align-items:stretch;}
+ .category-pills {overflow-x:auto;flex-wrap:nowrap;max-width:100%;padding-bottom:8px;}
+ .pill-btn {flex-shrink:0;}
+ .search-box {min-width:0;width:100%;}
+}
+@media (max-width: 600px) {
+ .header-container {padding:10px 14px;gap:8px;}
+ .header-brand {min-width:0;}
+ .header-brand img {height:40px;max-width:130px;}
+ .header-actions {gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+ .header-actions .btn {padding:9px 10px;font-size:.76rem;gap:5px;}
+ .admin-main {padding:16px 12px 36px;}
+ .stats-grid {grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+ .stat-card {padding:14px 12px;gap:9px;min-width:0;}
+ .stat-icon {width:36px;height:36px;font-size:1rem;flex-shrink:0;}
+ .stat-info h3 {font-size:1.25rem;}
+ .stat-info p {font-size:.71rem;}
+ .card {padding:18px 14px;margin-bottom:18px;}
+ .card-title {font-size:1.08rem;}
+ .card-header {margin-bottom:16px;}
+ .upload-dropzone {padding:28px 12px;}
+ .upload-meta-grid {grid-template-columns:1fr;gap:14px;}
+ .queue-list,.works-grid {grid-template-columns:1fr;}
+ .queue-item {min-width:0;}
+ .work-media-wrapper {height:220px;}
+ .filter-controls {gap:12px;}
+ .login-card {padding:26px 20px;}
+ .preview-modal-overlay,.confirm-modal-overlay {padding:12px;}
+ .preview-modal-content {height:auto;max-height:85dvh;}
+ .preview-modal-content img,.preview-modal-content video {max-height:75dvh;object-fit:contain;}
+}
     </style>
 </head>
 <body>
@@ -1582,7 +1619,7 @@
                 card.className = 'work-card';
 
                 const mediaElement = item.type === 'video'
-                    ? `<video src="${item.mediaUrl}" muted playsinline></video>`
+                    ? `<video data-preview-src="${item.mediaUrl}" muted playsinline preload="none"></video>`
                     : `<img src="${item.mediaUrl}" alt="${item.title}" loading="lazy">`;
 
                 card.innerHTML = `
@@ -1609,6 +1646,21 @@
                 `;
                 grid.appendChild(card);
             });
+            // Admin videolari yalnizca gorunduklerinde onizleme verisi ister.
+            const adminVideos = grid.querySelectorAll('video[data-preview-src]');
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (!entry.isIntersecting) return;
+                        entry.target.src = entry.target.dataset.previewSrc + '#t=0.1';
+                        entry.target.preload = 'metadata';
+                        obs.unobserve(entry.target);
+                    });
+                }, { rootMargin: '100px' });
+                adminVideos.forEach(v => observer.observe(v));
+            } else {
+                adminVideos.forEach(v => { v.src = v.dataset.previewSrc + '#t=0.1'; v.preload='metadata'; });
+            }
         }
 
         // ====== FİLTRE VE ARAMA KONTROLLERİ ======
