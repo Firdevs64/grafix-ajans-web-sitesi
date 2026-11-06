@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Çalışmalarımız | Grafix Ajans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK (v10 compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="firebase-config.js"></script>
+    
+    <style>
+        :root { --orange: #ff6b35; --dark: #111; --g1: #f5f5f7; --white: #fff; --g7: #777; --ease: cubic-bezier(0.23, 1, 0.32, 1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; color: var(--dark); background-color: var(--white); }
+        /* FIX: color: inherit prevents browser default blue/purple links */
+        a { text-decoration: none; color: inherit; }
+        
+        .header { position: fixed; top: 0; left: 0; width: 100%; z-index: 100; padding: 12px 0; background: rgba(255,255,255,1); box-shadow: 0 4px 20px rgba(0,0,0,.08); transition: all .4s var(--ease); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .header .inner { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .header .logo img { height: 64px; max-width: 180px; object-fit: contain; }
+        .nav-links { display: flex; gap: 32px; align-items: center; list-style: none; }
+        .nav-links a { font-size: .9rem; font-weight: 500; color: var(--dark); transition: color .3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--orange); }
+        .nav-cta { background: var(--dark); color: var(--white)!important; padding: 12px 28px; border-radius: 50px; font-weight: 600; font-size: .85rem; border: 1px solid transparent; transition: all .3s var(--ease); }
+        .nav-cta:hover { background: var(--orange); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255,107,53,.3); }
+        
+        .page-hero { padding: 180px 0 80px; text-align: center; background: var(--g1); }
+        .page-hero h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; color: var(--dark); margin-bottom: 20px; }
+        .page-hero p { font-size: 1.15rem; color: var(--g7); max-width: 600px; margin: 0 auto; }
+
+        .filters { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; padding: 50px 0; }
+        .filter-btn { padding: 10px 24px; background: transparent; border: 1px solid rgba(0,0,0,0.1); border-radius: 50px; cursor: pointer; font-family: inherit; font-weight: 500; transition: all .3s; font-size: .9rem; color: var(--dark); }
+        .filter-btn.active, .filter-btn:hover { background: var(--orange); color: var(--white); border-color: var(--orange); }
+        
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; padding-bottom: 100px; }
+        .gallery-item { position: relative; border-radius: 16px; overflow: hidden; height: 300px; background: #eee; cursor: pointer; transition: transform 0.4s var(--ease); }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .gallery-item img, .gallery-item video { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+        .gallery-item:hover img, .gallery-item:hover video { transform: scale(1.05); }
+        .overlay { position: absolute; inset: 0; background: rgba(255,107,53,0.8); display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s var(--ease); }
+        .gallery-item:hover .overlay { opacity: 1; }
+        .overlay i { color: var(--white); font-size: 2rem; transform: scale(0.5); transition: transform 0.4s var(--ease); }
+        .gallery-item:hover .overlay i { transform: scale(1); }
+        
+        .vid-label { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: bold; pointer-events: none; }
+
+        /* VIDEO MODAL STYLES */
+        .vid-modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+        .vid-modal.show { display: flex; opacity: 1; }
+        .vid-modal video { max-width: 90%; max-height: 90%; outline: none; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        .vid-modal-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 35px; cursor: pointer; transition: 0.3s; }
+        .vid-modal-close:hover { color: var(--orange); transform: scale(1.1); }
+
+        /* FOOTER */
+        .footer { padding: 80px 0 30px; background: var(--dark); color: rgba(255,255,255,.6); font-size: .85rem; line-height: 1.6; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 50px; }
+        .footer h4 { color: var(--white); font-size: .9rem; margin-bottom: 16px; }
+        .footer ul { list-style: none; }
+        .footer ul li { margin-bottom: 5px; }
+        .footer a:hover { color: var(--orange); }
+        .footer-logo{margin-bottom:16px;}
+        .footer-logo img{height:52px;max-width:160px;object-fit:contain;display:block;}
+        .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:.78rem;flex-wrap:wrap;gap:12px;}
+        .footer-admin-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.45);text-decoration:none;font-size:0.76rem;padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);transition:all .3s ease;}
+        .footer-admin-link:hover{color:#ff6b35;border-color:#ff6b35;background:rgba(255,107,53,0.1);}
+        .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.06); font-size: .78rem; }
+        
+        @media(max-width: 768px) {
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    
+        
+        /* ====== UNIFIED MEDIA VIEWER MODAL (SABİT BOYUT & ÇERÇEVESİZ) ====== */
+        .media-viewer-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(10, 12, 16, 0.94);
+            backdrop-filter: blur(10px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .media-viewer-modal.show {
+            display: flex;
+            opacity: 1;
+        }
+        .media-viewer-wrapper {
+            position: relative;
+            width: 960px;
+            max-width: 92vw;
+            height: 640px;
+            max-height: 82vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none !important;
+            box-shadow: none !important;
+        }
+        .media-viewer-stage {
+            width: 100%;
+            height: calc(100% - 46px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: transparent;
+        }
+        .media-viewer-stage img,
+        .media-viewer-stage video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            background: transparent;
+            border-radius: 6px;
+        }
+        .media-viewer-footer {
+            width: 100%;
+            height: 36px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #fff;
+            padding: 0 4px;
+            font-size: 0.9rem;
+        }
+        .viewer-title {
+            font-weight: 600;
+            color: #ffffff;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 70%;
+        }
+        .viewer-counter {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 0.82rem;
+            font-weight: 500;
+        }
+        .media-viewer-close {
+            position: absolute;
+            top: -44px;
+            right: 0;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 32px;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s, transform 0.2s;
+            z-index: 10;
+        }
+        .media-viewer-close:hover {
+            color: var(--orange);
+            transform: scale(1.15);
+        }
+        .media-viewer-arrow {
+            position: absolute;
+            top: calc(50% - 20px);
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        .media-viewer-arrow:hover {
+            background: var(--orange);
+            border-color: var(--orange);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .media-viewer-arrow.prev {
+            left: -60px;
+        }
+        .media-viewer-arrow.next {
+            right: -60px;
+        }
+        @media (max-width: 1100px) {
+            .media-viewer-arrow.prev { left: 10px; }
+            .media-viewer-arrow.next { right: 10px; }
+            .media-viewer-close { top: -36px; }
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="inner">
+                <a href="index.html" class="logo"><img src="images/grafix-logo.png" alt="Grafix Ajans"></a>
+                <ul class="nav-links">
+                    <li><a href="index.html#services">Hizmetlerimiz</a></li>
+                    <li><a href="calismalarimiz.html" class="active">Çalışmalarımız</a></li>
+                    <li><a href="index.html#refs">Referanslarımız</a></li>
+                    <li><a href="index.html#contact" class="nav-cta">İletişim</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="container">
+            <h1>Tüm Projelerimiz</h1>
+            <p>Farklı sektörlerden markalar için ürettiğimiz profesyonel çözümleri detaylı olarak inceleyin.</p>
+        </div>
+    </section>
+
+    <section class="portfolio-page">
+        <div class="container">
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">Tümü</button>
+                <button class="filter-btn" data-filter="tabela">Işıklı/Işıksız Tabela</button>
+                <button class="filter-btn" data-filter="totem">Totem</button>
+                <button class="filter-btn" data-filter="arac">Araç Kaplama</button>
+                <button class="filter-btn" data-filter="dijital">Dijital Baskı</button>
+                <button class="filter-btn" data-filter="promosyon">Promosyon</button>
+                <button class="filter-btn" data-filter="kisiyeözel">Kişiye Özel Promosyon</button>
+                <button class="filter-btn" data-filter="metal">Metal Markalama</button>
+                <button class="filter-btn" data-filter="baskı">UV Baskı</button>
+            </div>
+            
+            <div class="gallery-grid">
+                
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/aile.jpg" data-lightbox="gallery" data-title="aile.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/aile.jpg" alt="aile.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item dijital">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/akp.jpeg" data-lightbox="gallery" data-title="akp.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/akp.jpeg" alt="akp.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/amongusvideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/amongusvideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/anaokulu.jpg" data-lightbox="gallery" data-title="anaokulu.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/anaokulu.jpg" alt="anaokulu.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/beyaz.jpg" data-lightbox="gallery" data-title="beyaz.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/beyaz.jpg" alt="beyaz.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/beyaz1.jpg" data-lightbox="gallery" data-title="beyaz1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/beyaz1.jpg" alt="beyaz1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/birevim.jpg" data-lightbox="gallery" data-title="birevim.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/birevim.jpg" alt="birevim.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/birlik1.png" data-lightbox="gallery" data-title="birlik1.png">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/birlik1.png" alt="birlik1.png" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/birlik2.jpg" data-lightbox="gallery" data-title="birlik2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/birlik2.jpg" alt="birlik2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/birlik3.jpg" data-lightbox="gallery" data-title="birlik3.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/birlik3.jpg" alt="birlik3.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/birlik4.jpg" data-lightbox="gallery" data-title="birlik4.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/birlik4.jpg" alt="birlik4.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/bozzade.jpg" data-lightbox="gallery" data-title="bozzade.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/bozzade.jpg" alt="bozzade.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/bozzade1.jpg" data-lightbox="gallery" data-title="bozzade1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/bozzade1.jpg" alt="bozzade1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/bozzade2.jpg" data-lightbox="gallery" data-title="bozzade2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/bozzade2.jpg" alt="bozzade2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/bozzadek%C3%BCnefevideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/bozzadek%C3%BCnefevideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item tabela" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/bozzadetabela.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/bozzadetabela.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item metal">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7ak1.jpg" data-lightbox="gallery" data-title="bıçak1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7ak1.jpg" alt="bıçak1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item metal">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7ak2.jpg" data-lightbox="gallery" data-title="bıçak2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7ak2.jpg" alt="bıçak2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item metal" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item metal" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo1.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo1.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item metal" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo2.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/b%C4%B1%C3%A7akvideo2.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item dijital" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/dijitalbask%C4%B11.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/dijitalbask%C4%B11.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/dp.jpeg" data-lightbox="gallery" data-title="dp.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/dp.jpeg" alt="dp.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/erdil.jpg" data-lightbox="gallery" data-title="erdil.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/erdil.jpg" alt="erdil.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/erdil1.jpg" data-lightbox="gallery" data-title="erdil1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/erdil1.jpg" alt="erdil1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/finaloto.jpg" data-lightbox="gallery" data-title="finaloto.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/finaloto.jpg" alt="finaloto.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/g%C3%BClbeyaz.jpeg" data-lightbox="gallery" data-title="gülbeyaz.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/g%C3%BClbeyaz.jpeg" alt="gülbeyaz.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/harikaokul1.jpg" data-lightbox="gallery" data-title="harikaokul1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/harikaokul1.jpg" alt="harikaokul1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/harikaokul2.jpg" data-lightbox="gallery" data-title="harikaokul2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/harikaokul2.jpg" alt="harikaokul2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/john.jpeg" data-lightbox="gallery" data-title="john.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/john.jpeg" alt="john.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kar%C5%9F%C4%B1da.jpg" data-lightbox="gallery" data-title="karşıda.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kar%C5%9F%C4%B1da.jpg" alt="karşıda.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item metal">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kasap.jpeg" data-lightbox="gallery" data-title="kasap.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kasap.jpeg" alt="kasap.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/kaya%C3%A7akmakvideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/kaya%C3%A7akmakvideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kebap1.jpg" data-lightbox="gallery" data-title="kebap1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kebap1.jpg" alt="kebap1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kgm.jpg" data-lightbox="gallery" data-title="kgm.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kgm.jpg" alt="kgm.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kgm1.jpg" data-lightbox="gallery" data-title="kgm1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kgm1.jpg" alt="kgm1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/kgm2.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/kgm2.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kudra.jpg" data-lightbox="gallery" data-title="kudra.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kudra.jpg" alt="kudra.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kudra1.jpg" data-lightbox="gallery" data-title="kudra1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kudra1.jpg" alt="kudra1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kudra2.jpg" data-lightbox="gallery" data-title="kudra2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kudra2.jpg" alt="kudra2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/kudra%C3%A7akmakvideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/kudra%C3%A7akmakvideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kuzu.jpg" data-lightbox="gallery" data-title="kuzu.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kuzu.jpg" alt="kuzu.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kuzu1.jpg" data-lightbox="gallery" data-title="kuzu1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kuzu1.jpg" alt="kuzu1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/kuzu2.jpg" data-lightbox="gallery" data-title="kuzu2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/kuzu2.jpg" alt="kuzu2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/mimar.jpeg" data-lightbox="gallery" data-title="mimar.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/mimar.jpeg" alt="mimar.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/mimar.jpg" data-lightbox="gallery" data-title="mimar.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/mimar.jpg" alt="mimar.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/mimar1.jpg" data-lightbox="gallery" data-title="mimar1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/mimar1.jpg" alt="mimar1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/mimar2.jpg" data-lightbox="gallery" data-title="mimar2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/mimar2.jpg" alt="mimar2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/motor1.jpg" data-lightbox="gallery" data-title="motor1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/motor1.jpg" alt="motor1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/motor2.jpg" data-lightbox="gallery" data-title="motor2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/motor2.jpg" alt="motor2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/motor3.jpg" data-lightbox="gallery" data-title="motor3.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/motor3.jpg" alt="motor3.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/muratbey.jpeg" data-lightbox="gallery" data-title="muratbey.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/muratbey.jpeg" alt="muratbey.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/neva.jpeg" data-lightbox="gallery" data-title="neva.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/neva.jpeg" alt="neva.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/nihat.jpeg" data-lightbox="gallery" data-title="nihat.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/nihat.jpeg" alt="nihat.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/okul1.jpg" data-lightbox="gallery" data-title="okul1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/okul1.jpg" alt="okul1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/okul2.jpg" data-lightbox="gallery" data-title="okul2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/okul2.jpg" alt="okul2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/omnikel1.jpg" data-lightbox="gallery" data-title="omnikel1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/omnikel1.jpg" alt="omnikel1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/omnikel2.jpg" data-lightbox="gallery" data-title="omnikel2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/omnikel2.jpg" alt="omnikel2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/oyun.jpg" data-lightbox="gallery" data-title="oyun.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/oyun.jpg" alt="oyun.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/palmira.jpg" data-lightbox="gallery" data-title="palmira.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/palmira.jpg" alt="palmira.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/patron.jpg" data-lightbox="gallery" data-title="patron.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/patron.jpg" alt="patron.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/pervane1.jpg" data-lightbox="gallery" data-title="pervane1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/pervane1.jpg" alt="pervane1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/pinaryapi1.jpg" data-lightbox="gallery" data-title="pinaryapi1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/pinaryapi1.jpg" alt="pinaryapi1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/pinaryapi2.jpg" data-lightbox="gallery" data-title="pinaryapi2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/pinaryapi2.jpg" alt="pinaryapi2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/pinaryapi3.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/pinaryapi3.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/sigortam1.jpg" data-lightbox="gallery" data-title="sigortam1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/sigortam1.jpg" alt="sigortam1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/soylu.jpg" data-lightbox="gallery" data-title="soylu.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/soylu.jpg" alt="soylu.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/soylu1.jpg" data-lightbox="gallery" data-title="soylu1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/soylu1.jpg" alt="soylu1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/soylu2.jpg" data-lightbox="gallery" data-title="soylu2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/soylu2.jpg" alt="soylu2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item dijital">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/s%C3%BCt.jpg" data-lightbox="gallery" data-title="süt.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/s%C3%BCt.jpg" alt="süt.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item dijital">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/s%C3%BCt1.jpg" data-lightbox="gallery" data-title="süt1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/s%C3%BCt1.jpg" alt="süt1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/tablovideo.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/tablovideo.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/tarcanlar.jpeg" data-lightbox="gallery" data-title="tarcanlar.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/tarcanlar.jpeg" alt="tarcanlar.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/tchibo1.jpg" data-lightbox="gallery" data-title="tchibo1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/tchibo1.jpg" alt="tchibo1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon" onclick="openVideoModal('images/%C3%87ALI%C5%9EMALARIM/tchibo2.mp4')">
+            <video src="images/%C3%87ALI%C5%9EMALARIM/tchibo2.mp4#t=0.1" muted playsinline loading="lazy"></video>
+            <div class="overlay"><i class="fas fa-play-circle"></i></div>
+            <div class="vid-label"><i class="fas fa-video"></i> Video</div>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/tugva.jpeg" data-lightbox="gallery" data-title="tugva.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/tugva.jpeg" alt="tugva.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item promosyon">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/tugva1.jpeg" data-lightbox="gallery" data-title="tugva1.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/tugva1.jpeg" alt="tugva1.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/turkcell.jpg" data-lightbox="gallery" data-title="turkcell.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/turkcell.jpg" alt="turkcell.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/uzman.jpg" data-lightbox="gallery" data-title="uzman.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/uzman.jpg" alt="uzman.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/varol.jpg" data-lightbox="gallery" data-title="varol.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/varol.jpg" alt="varol.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/varol1.jpg" data-lightbox="gallery" data-title="varol1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/varol1.jpg" alt="varol1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item arac">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/vrl.jpeg" data-lightbox="gallery" data-title="vrl.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/vrl.jpeg" alt="vrl.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/vrl1.jpg" data-lightbox="gallery" data-title="vrl1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/vrl1.jpg" alt="vrl1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item tabela">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/%C3%A7evsa1.jpg" data-lightbox="gallery" data-title="çevsa1.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/%C3%A7evsa1.jpg" alt="çevsa1.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/%C3%A7evsa2.jpg" data-lightbox="gallery" data-title="çevsa2.jpg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/%C3%A7evsa2.jpg" alt="çevsa2.jpg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+        <div class="gallery-item totem">
+            <a href="images/%C3%87ALI%C5%9EMALARIM/%C5%9Fehit.jpeg" data-lightbox="gallery" data-title="şehit.jpeg">
+                <img src="images/%C3%87ALI%C5%9EMALARIM/%C5%9Fehit.jpeg" alt="şehit.jpeg" loading="lazy">
+                <div class="overlay"><i class="fas fa-search-plus"></i></div>
+            </a>
+        </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CUSTOM VIDEO MODAL -->
+    <div id="videoModal" class="vid-modal" onclick="closeVideoModal(event)">
+        <div class="vid-modal-close" onclick="closeVideoModal(event)"><i class="fas fa-times"></i></div>
+        <video id="modalVideo" controls></video>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div><div class="footer-logo"><img src="images/grafix-logo.png" alt="Grafix Ajans"></div><p>Profesyonel reklam çözümleri ile markanızı öne çıkarıyoruz. 2005'ten beri Uşak'ta güvenilir hizmet.</p></div>
+                <div><h4>Sayfalar</h4><ul><li><a href="index.html">Anasayfa</a></li><li><a href="index.html#services">Hizmetlerimiz</a></li><li><a href="calismalarimiz.html">Çalışmalarımız</a></li><li><a href="index.html#contact">İletişim</a></li></ul></div>
+                <div><h4>Hizmetler</h4><ul><li>Tabela</li><li>Dijital Baskı</li><li>Araç Kaplama</li><li>Kutu Harf</li><li>Totem</li><li>Promosyon</li></ul></div>
+                <div><h4>İletişim</h4><ul style="color:rgba(255,255,255,0.6)"><li>Celal Bayar Cd. no:84, Uşak</li><li>0533 251 74 70</li></ul></div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 GRAFİx AJANS. Tüm hakları saklıdır.</span>
+                <a href="admin.html" class="footer-admin-link" title="Yönetici Paneli">
+                    <i class="fas fa-lock"></i> Yönetici Girişi
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    
+    <script>
+        
+
+        const additionalWorks = [
+            { file: 'abaailesi.jpeg', category: 'tabela' },
+            { file: 'asitmen.jpeg', category: 'dijital' },
+            { file: 'ayı.jpeg', category: 'dijital' },
+            { file: 'değişim.jpeg', category: 'dijital' },
+            { file: 'değişimvideo.mp4', category: 'dijital' },
+            { file: 'egekağıtsan.jpeg', category: 'tabela' },
+            { file: 'esra.jpeg', category: 'dijital' },
+            { file: 'forma.mp4', category: 'promosyon' },
+            { file: 'grafix.jpg', category: 'tabela' },
+            { file: 'grafix.mp4', category: 'tabela' },
+            { file: 'gözlük.jpeg', category: 'baskı' },
+            { file: 'gözlük.mp4', category: 'baskı' },
+            { file: 'ilayda.jpeg', category: 'dijital' },
+            { file: 'işkur1.jpeg', category: 'dijital' },
+            { file: 'işkur2.jpeg', category: 'baskı' },
+            { file: 'işkur3.jpeg', category: 'dijital' },
+            { file: 'işkur4.mp4', category: 'baskı' },
+            { file: 'işkur5.jpeg', category: 'baskı' },
+            { file: 'kelebek.jpeg', category: 'dijital' },
+            { file: 'kravatlı.jpeg', category: 'baskı' },
+            { file: 'kudra.jpeg', category: 'tabela' },
+            { file: 'kupa (2).jpeg', category: 'promosyon' },
+            { file: 'kupa.jpeg', category: 'baskı' },
+            { file: 'kupa.mp4', category: 'baskı' },
+            { file: 'kupa1.jpeg', category: 'baskı' },
+            { file: 'kupa2.jpeg', category: 'baskı' },
+            { file: 'kupa3.jpeg', category: 'baskı' },
+            { file: 'kupa4.jpeg', category: 'baskı' },
+            { file: 'kupa5.jpeg', category: 'baskı' },
+            { file: 'kupa6.mp4', category: 'baskı' },
+            { file: 'kupa7.jpeg', category: 'promosyon' },
+            { file: 'kupa8.jpeg', category: 'promosyon' },
+            { file: 'lumiki (2).jpeg', category: 'tabela' },
+            { file: 'lumiki (2).mp4', category: 'tabela' },
+            { file: 'lumiki (3).jpeg', category: 'tabela' },
+            { file: 'lumiki (3).mp4', category: 'tabela' },
+            { file: 'lumiki (4).jpeg', category: 'dijital' },
+            { file: 'lumiki (4).mp4', category: 'dijital' },
+            { file: 'lumiki (5).jpeg', category: 'tabela' },
+            { file: 'lumiki (5).mp4', category: 'tabela' },
+            { file: 'lumiki.jpeg', category: 'dijital' },
+            { file: 'lumiki.mp4', category: 'dijital' },
+            { file: 'mavili.jpeg', category: 'baskı' },
+            { file: 'meyhane.jpeg', category: 'tabela' },
+            { file: 'meyhane1.jpeg', category: 'tabela' },
+            { file: 'meyhane2.jpeg', category: 'tabela' },
+            { file: 'meyhane3.jpeg', category: 'tabela' },
+            { file: 'meyhane4.mp4', category: 'tabela' },
+            { file: 'millet (2).jpeg', category: 'totem' },
+            { file: 'millet (4).jpeg', category: 'totem' },
+            { file: 'millet (5).jpeg', category: 'totem' },
+            { file: 'millet (6).jpeg', category: 'totem' },
+            { file: 'millet.jpeg', category: 'totem' },
+            { file: 'millet.mp4', category: 'totem' },
+            { file: 'mimarlarodası.mp4', category: 'tabela' },
+            { file: 'mobilyacım1.jpeg', category: 'tabela' },
+            { file: 'mobilyacım2.jpeg', category: 'tabela' },
+            { file: 'mobilyacım3.mp4', category: 'tabela' },
+            { file: 'motor4.jpeg', category: 'arac' },
+            { file: 'muratbey (2).jpeg', category: 'tabela' },
+            { file: 'muratbey (3).jpeg', category: 'tabela' },
+            { file: 'muratbey (4).jpeg', category: 'tabela' },
+            { file: 'nevaakşam.jpeg', category: 'tabela' },
+            { file: 'nevaakşam1.jpeg', category: 'tabela' },
+            { file: 'nevabaskı.mp4', category: 'dijital' },
+            { file: 'nevagece.jpeg', category: 'tabela' },
+            { file: 'nevagece1.jpeg', category: 'tabela' },
+            { file: 'nevayapım.jpeg', category: 'dijital' },
+            { file: 'pastane (2).jpeg', category: 'promosyon' },
+            { file: 'pastane (2).mp4', category: 'promosyon' },
+            { file: 'pastane.jpeg', category: 'promosyon' },
+            { file: 'pastane.mp4', category: 'promosyon' },
+            { file: 'pervaneailesi.jpeg', category: 'tabela' },
+            { file: 'pizza (2).jpeg', category: 'tabela' },
+            { file: 'pizza (3).jpeg', category: 'tabela' },
+            { file: 'pizza (4).jpeg', category: 'tabela' },
+            { file: 'pizza.jpeg', category: 'tabela' },
+            { file: 'pizza.mp4', category: 'tabela' },
+            { file: 'pınaryapı.jpg', category: 'dijital' },
+            { file: 'tarcanlar (2).jpeg', category: 'tabela' },
+            { file: 'tarcanlar (2).mp4', category: 'tabela' },
+            { file: 'tarcanlar (3).jpeg', category: 'tabela' },
+            { file: 'tarcanlar (3).mp4', category: 'tabela' },
+            { file: 'tarcanlar (5).jpeg', category: 'dijital' },
+            { file: 'tarcanlar (6).jpeg', category: 'dijital' },
+            { file: 'tarcanlar (7).jpeg', category: 'arac' },
+            { file: 'tarcanlar (8).jpeg', category: 'tabela' },
+            { file: 'tarcanlar.mp4', category: 'tabela' },
+            { file: 'toklu1.jpeg', category: 'totem' },
+            { file: 'toklu2.mp4', category: 'totem' },
+            { file: 'toklu3.jpeg', category: 'totem' },
+            { file: 'tugva.mp4', category: 'promosyon' },
+            { file: 'tunçakademi.jpeg', category: 'tabela' },
+            { file: 'turktelekom (2).jpeg', category: 'tabela' },
+            { file: 'turktelekom (3).jpeg', category: 'dijital' },
+            { file: 'turktelekom (4).jpeg', category: 'dijital' },
+            { file: 'turktelekom (5).jpeg', category: 'dijital' },
+            { file: 'turktelekom.jpeg', category: 'dijital' },
+            { file: 'vizyon (2).jpeg', category: 'tabela' },
+            { file: 'vizyon (3).jpeg', category: 'tabela' },
+            { file: 'vizyon (4).jpeg', category: 'tabela' },
+            { file: 'vizyon (5).jpeg', category: 'tabela' },
+            { file: 'vizyon.jpeg', category: 'tabela' },
+            { file: 'vizyon.mp4', category: 'tabela' },
+            { file: 'yalçıninşaat (2).jpeg', category: 'tabela' },
+            { file: 'yalçıninşaat (3).jpeg', category: 'tabela' },
+            { file: 'yalçıninşaat (4).jpeg', category: 'tabela' },
+            { file: 'yalçıninşaat (5).jpeg', category: 'tabela' },
+            { file: 'yalçıninşaat (6).jpeg', category: 'tabela' },
+            { file: 'yalçıninşaat.jpeg', category: 'tabela' },
+            { file: 'ygdent.jpeg', category: 'tabela' },
+            { file: 'zümrüt (2).jpeg', category: 'tabela' },
+            { file: 'zümrüt (3).jpeg', category: 'tabela' },
+            { file: 'zümrüt (4).jpeg', category: 'tabela' },
+            { file: 'zümrüt (5).jpeg', category: 'tabela' },
+            { file: 'zümrüt.jpeg', category: 'tabela' },
+            { file: 'zümrüt.mp4', category: 'tabela' },
+            { file: 'çakmak.jpeg', category: 'baskı' },
+            { file: 'özgübutik1.jpeg', category: 'tabela' },
+            { file: 'özgübutik2.jpeg', category: 'tabela' },
+            { file: 'şarkı.jpeg', category: 'tabela' },
+            { file: 'şarkı.mp4', category: 'tabela' }
+        ];
+
+        const galleryGrid = document.querySelector('.gallery-grid');
+        const mediaDirectory = 'images/%C3%87ALI%C5%9EMALARIM/';
+
+        function createOverlay(iconClass) {
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            const icon = document.createElement('i');
+            icon.className = iconClass;
+            overlay.append(icon);
+            return overlay;
+        }
+
+        additionalWorks.forEach(({ file, category }) => {
+            const source = mediaDirectory + encodeURIComponent(file);
+            const item = document.createElement('div');
+            item.className = `gallery-item ${category}`;
+
+            if (file.toLowerCase().endsWith('.mp4')) {
+                item.addEventListener('click', () => openVideoModal(source));
+                const video = document.createElement('video');
+                video.src = `${source}#t=0.1`;
+                video.muted = true;
+                video.playsInline = true;
+                video.preload = 'metadata';
+                item.append(video, createOverlay('fas fa-play-circle'));
+
+                const label = document.createElement('div');
+                label.className = 'vid-label';
+                label.innerHTML = '<i class="fas fa-video"></i> Video';
+                item.append(label);
+            } else {
+                const link = document.createElement('a');
+                link.href = source;
+                link.dataset.lightbox = 'gallery';
+                link.dataset.title = file;
+                const image = document.createElement('img');
+                image.src = source;
+                image.alt = file;
+                image.loading = 'lazy';
+                link.append(image, createOverlay('fas fa-search-plus'));
+                item.append(link);
+            }
+
+            galleryGrid.append(item);
+        });
+        
+        // Firestore'dan Dinamik Calismalari Yukleme
+        async function loadFirestoreWorks() {
+            if (typeof firebase === 'undefined' || !firebase.firestore) return;
+
+            try {
+                const snapshot = await firebase.firestore().collection('works')
+                    .orderBy('createdAt', 'desc')
+                    .get();
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const item = document.createElement('div');
+                    item.className = `gallery-item ${data.category || 'dijital'}`;
+
+                    if (data.type === 'video' || (data.mediaUrl && data.mediaUrl.toLowerCase().endsWith('.mp4'))) {
+                        item.addEventListener('click', () => openVideoModal(data.mediaUrl));
+                        const video = document.createElement('video');
+                        video.src = `${data.mediaUrl}#t=0.1`;
+                        video.muted = true;
+                        video.playsInline = true;
+                        video.preload = 'metadata';
+                        item.append(video, createOverlay('fas fa-play-circle'));
+
+                        const label = document.createElement('div');
+                        label.className = 'vid-label';
+                        label.innerHTML = '<i class="fas fa-video"></i> Video';
+                        item.append(label);
+                    } else {
+                        const link = document.createElement('a');
+                        link.href = data.mediaUrl;
+                        link.dataset.lightbox = 'gallery';
+                        link.dataset.title = data.title || 'Grafix Ajans Calismasi';
+
+                        const image = document.createElement('img');
+                        image.src = data.mediaUrl;
+                        image.alt = data.title || 'Grafix Ajans';
+                        image.loading = 'lazy';
+                        link.append(image, createOverlay('fas fa-search-plus'));
+                        item.append(link);
+                    }
+
+                    // En basa ekle (En yeni eklenen en ustte ciksin)
+                    galleryGrid.prepend(item);
+                });
+            } catch (err) {
+                console.warn('Firestore calismalari yuklenemedi:', err);
+            }
+        }
+
+        // Sayfa acildiginda veritabanindaki calismalari getir
+        loadFirestoreWorks();
+        
+        // Filtering logic (Tumu destegi ve dinamik elemanlar dahil)
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const filter = btn.getAttribute('data-filter');
+                const allItems = document.querySelectorAll('.gallery-item');
+                
+                allItems.forEach(item => {
+                    if (filter === 'all' || item.classList.contains(filter)) {
+                        item.style.display = 'block';
+                        setTimeout(() => item.style.opacity = '1', 50);
+                    } else {
+                        item.style.opacity = '0';
+                        setTimeout(() => item.style.display = 'none', 300);
+                    }
+                });
+            });
+        });
+
+        
+        // ====== UNIFIED VIEWER LOGIC (HER GÖRSEL & VİDEO AYNI SABİT BOYUTTA AÇILIR) ======
+        let currentViewerIndex = 0;
+        let visibleGalleryItems = [];
+
+        function updateVisibleGalleryItems() {
+            const allItems = Array.from(document.querySelectorAll('.gallery-item'));
+            visibleGalleryItems = allItems.filter(item => {
+                const style = window.getComputedStyle(item);
+                return style.display !== 'none' && style.opacity !== '0';
+            });
+        }
+
+        function getMediaDataFromItem(item) {
+            const link = item.querySelector('a');
+            const img = item.querySelector('img');
+            const video = item.querySelector('video');
+
+            if (video) {
+                // remove hash if present
+                const src = video.getAttribute('src').split('#')[0];
+                return {
+                    url: src,
+                    type: 'video',
+                    title: item.dataset.title || 'Grafix Ajans Video Çalışması'
+                };
+            } else if (link || img) {
+                const url = (link ? link.getAttribute('href') : img.getAttribute('src'));
+                const title = (link ? link.dataset.title : img.getAttribute('alt')) || 'Grafix Ajans Çalışması';
+                return {
+                    url: url,
+                    type: 'image',
+                    title: title
+                };
+            }
+            return null;
+        }
+
+        function openMediaViewer(index) {
+            updateVisibleGalleryItems();
+            if (visibleGalleryItems.length === 0) return;
+
+            if (index < 0) index = visibleGalleryItems.length - 1;
+            if (index >= visibleGalleryItems.length) index = 0;
+
+            currentViewerIndex = index;
+            const targetItem = visibleGalleryItems[currentViewerIndex];
+            const data = getMediaDataFromItem(targetItem);
+            if (!data) return;
+
+            const modal = document.getElementById('mediaViewerModal');
+            const imgEl = document.getElementById('viewerImg');
+            const videoEl = document.getElementById('viewerVideo');
+            const titleEl = document.getElementById('viewerTitle');
+            const counterEl = document.getElementById('viewerCounter');
+
+            if (data.type === 'video') {
+                imgEl.style.display = 'none';
+                imgEl.src = '';
+                videoEl.style.display = 'block';
+                videoEl.src = data.url;
+                videoEl.play().catch(() => {});
+            } else {
+                videoEl.pause();
+                videoEl.style.display = 'none';
+                videoEl.src = '';
+                imgEl.style.display = 'block';
+                imgEl.src = data.url;
+                imgEl.alt = data.title;
+            }
+
+            titleEl.textContent = data.title;
+            counterEl.textContent = `${currentViewerIndex + 1} / ${visibleGalleryItems.length}`;
+
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMediaViewer(e) {
+            if (e && (e.target.tagName === 'IMG' || e.target.tagName === 'VIDEO')) return;
+            const modal = document.getElementById('mediaViewerModal');
+            const videoEl = document.getElementById('viewerVideo');
+            const imgEl = document.getElementById('viewerImg');
+
+            modal.classList.remove('show');
+            if (videoEl) {
+                videoEl.pause();
+                videoEl.src = '';
+            }
+            if (imgEl) {
+                imgEl.src = '';
+            }
+            document.body.style.overflow = '';
+        }
+
+        function changeMediaViewer(direction) {
+            openMediaViewer(currentViewerIndex + direction);
+        }
+
+        // Global Event Delegation for all Gallery Items (Static, Additional, and Firestore)
+        galleryGrid.addEventListener('click', (e) => {
+            const item = e.target.closest('.gallery-item');
+            if (!item) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            updateVisibleGalleryItems();
+            const index = visibleGalleryItems.indexOf(item);
+            if (index !== -1) {
+                openMediaViewer(index);
+            }
+        });
+
+        // Keyboard Controls
+        document.addEventListener('keydown', (e) => {
+            const modal = document.getElementById('mediaViewerModal');
+            if (!modal || !modal.classList.contains('show')) return;
+
+            if (e.key === 'Escape') closeMediaViewer();
+            else if (e.key === 'ArrowLeft') changeMediaViewer(-1);
+            else if (e.key === 'ArrowRight') changeMediaViewer(1);
+        });
+
+    </script>
+
+    <!-- ====== UNIFIED MEDIA VIEWER MODAL ====== -->
+    <div id="mediaViewerModal" class="media-viewer-modal" onclick="closeMediaViewer(event)">
+        <div class="media-viewer-wrapper" onclick="event.stopPropagation()">
+            <button class="media-viewer-close" onclick="closeMediaViewer()">&times;</button>
+            <button class="media-viewer-arrow prev" onclick="changeMediaViewer(-1)" aria-label="Önceki">&#10094;</button>
+            <button class="media-viewer-arrow next" onclick="changeMediaViewer(1)" aria-label="Sonraki">&#10095;</button>
+
+            <div class="media-viewer-stage">
+                <img id="viewerImg" src="" alt="" style="display:none;">
+                <video id="viewerVideo" src="" controls playsinline autoplay style="display:none;"></video>
+            </div>
+
+            <div class="media-viewer-footer">
+                <span id="viewerTitle" class="viewer-title"></span>
+                <span id="viewerCounter" class="viewer-counter"></span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

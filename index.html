@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRAFİx AJANS | Reklam Promosyon ve Dijital Baskı Merkezi</title>
+    <meta name="description" content="Uşak'ta profesyonel reklam çözümleri. 2005'ten beri hizmetinizdeyiz.">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- GSAP -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+    <!-- Lightbox2 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+    <style>
+        :root{--orange:#ff6b35;--orange-l:#fff4ef;--green:#28a745;--green-l:#edfaf1;--dark: #111;--g7:#444;--g5:#888;--g3:#ccc;--g1:#f5f5f7;--white:#fff;--r:16px;--ease:cubic-bezier(.4,0,.2,1)}
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        html{scroll-behavior:auto}
+        html.lenis,html.lenis body{height:auto}
+        .lenis.lenis-smooth{scroll-behavior:auto}
+        .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+        body{font-family:'Inter',sans-serif;color:var(--g7);background:var(--white);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        .container{max-width:1200px;margin:0 auto;padding:0 24px}
+        img{max-width:100%;display:block}
+        a{text-decoration:none;color:inherit}
+        .split-line{overflow:hidden;display:block}
+        .split-line span{display:inline-block;transform:translateY(100%);will-change:transform}
+
+        /* ═══ TYPOGRAPHY & SECTION HEADINGS ═══ */
+        .section-label {
+            display: inline-block;
+            color: var(--orange);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+        .section-desc {
+            font-size: 1.15rem;
+            color: var(--g7);
+            line-height: 1.7;
+            max-width: 650px;
+        }
+        /* Centering specific headers */
+        .services-header, .portfolio-header, .refs-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .services-header .section-desc, .portfolio-header .section-desc, .refs-header .section-desc {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* ═══ PRELOADER ═══ */
+        #preloader{position:fixed;inset:0;background:var(--white);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px}
+        .loader-bar{width:200px;height:3px;background:var(--g1);border-radius:3px;overflow:hidden;position:relative}
+        .loader-bar span{position:absolute;height:100%;background:var(--orange);border-radius:3px;width:0%;transition:width .3s}
+        .loader-text{font-size:.8rem;font-weight:600;color:var(--g5);letter-spacing:4px;text-transform:uppercase}
+
+        /* ═══ HEADER ═══ */
+        .header{position:fixed;top:0;left:0;width:100%;z-index:100;padding:16px 0;background:rgba(255,255,255,0.92);backdrop-filter:blur(16px);border-bottom:1px solid rgba(0,0,0,0.05);box-shadow:0 4px 20px rgba(0,0,0,0.03);transition:all .4s var(--ease);}
+        .header.scrolled{padding:10px 0;background:rgba(255,255,255,0.98);box-shadow:0 4px 24px rgba(0,0,0,.08);}
+        .header .inner{display:flex;align-items:center;justify-content:space-between;width:100%;}
+        .header .logo img{height:68px;max-width:180px;object-fit:contain;transition:all .3s var(--ease);filter:drop-shadow(0 2px 6px rgba(0,0,0,0.04));}
+        .header.scrolled .logo img{height:52px;}
+        .nav-links{display:flex;gap:32px;align-items:center;list-style:none}
+        .nav-links a{font-size:.9rem;font-weight:500;color:var(--dark);position:relative;transition:color .3s}
+        .nav-links a:hover{color:var(--orange)}
+        .nav-cta{background:var(--dark);color:var(--white)!important;padding:12px 28px;border-radius:50px;font-weight:600;font-size:.85rem;border:1px solid transparent;transition:all .3s var(--ease);}
+        .nav-cta:hover{background:var(--orange);transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,107,53,.3);}
+        .hamburger{display:none;background:transparent;border:none;width:32px;height:24px;position:relative;cursor:pointer;z-index:101}
+        .hamburger span{display:block;width:100%;height:2px;background:var(--dark);position:absolute;left:0;transition:.3s var(--ease)}
+        .hamburger span:nth-child(1){top:0}
+        .hamburger span:nth-child(2){top:50%;transform:translateY(-50%)}
+        .hamburger span:nth-child(3){bottom:0}
+        .hamburger.active span:nth-child(1){top:50%;transform:translateY(-50%) rotate(45deg)}
+        .hamburger.active span:nth-child(2){opacity:0}
+        .hamburger.active span:nth-child(3){bottom:50%;transform:translateY(50%) rotate(-45deg)}
+
+        /* ═══ HERO ═══ */
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:160px 0 100px;background:url('images/hero-bg-cropped.jpg') center/cover no-repeat;text-align:center;}
+        .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.72) 40%, rgba(255,255,255,0.95) 100%);backdrop-filter:blur(3px);z-index:0;}
+        .hero .container{position:relative;z-index:1;width:100%;}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:var(--white);color:var(--orange);border:1px solid rgba(255,107,53,0.3);box-shadow:0 4px 14px rgba(255,107,53,0.12);border-radius:50px;font-size:0.82rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:20px;}
+        .hero-badge .badge-dot{width:7px;height:7px;background:var(--orange);border-radius:50%;}
+        .hero-content{max-width:900px;margin:0 auto;}
+        .hero h1{font-family:'Playfair Display',serif;font-size:4.5rem;line-height:1.15;color:var(--dark);font-weight:700;margin-bottom:24px;text-shadow:none;}
+        .hero h1 .accent{color:var(--orange);}
+        .hero-desc{font-size:1.15rem;line-height:1.8;color:var(--g7);max-width:600px;margin:0 auto 40px;opacity:0;text-shadow:none;}
+        .hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;opacity:0;}
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:50px;font-weight:600;font-size:.9rem;transition:all .3s var(--ease);cursor:pointer;border:none;font-family:inherit;}
+        .btn-primary{background:var(--orange);color:var(--white);box-shadow:0 4px 14px rgba(255,107,53,.3);}
+        .btn-primary:hover{background:#e85a25;transform:translateY(-3px);box-shadow:0 10px 28px rgba(255,107,53,.4);}
+        .btn-outline-white{background:transparent;color:var(--dark);border:1.5px solid var(--dark);backdrop-filter:blur(4px);}
+        .btn-outline-white:hover{border-color:var(--dark);background:var(--dark);color:var(--white);transform:translateY(-2px);}
+
+        /* ═══ MARQUEE TEXT ═══ */
+        .marquee-text{padding:24px 0;background:var(--dark);overflow:hidden;white-space:nowrap}
+        .marquee-text .track{display:flex;gap:60px;animation:mtScroll 20s linear infinite;width:max-content}
+        .marquee-text .item{font-size:1.1rem;font-weight:600;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:16px}
+        .marquee-text .item .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
+        @keyframes mtScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+        /* ═══ STATS ═══ */
+        .stats{padding:100px 0;background:var(--dark);position:relative;overflow:hidden}
+        .stats::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(255,107,53,.1),transparent 70%);top:-200px;right:-100px}
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;position:relative;z-index:1}
+        .stat{text-align:center}
+        .stat-num{font-size:3.5rem;font-weight:800;color:var(--white);line-height:1;margin-bottom:8px;font-family:'Playfair Display',serif}
+        .stat-num .suffix{color:var(--orange)}
+        .stat-label{font-size:.82rem;color:rgba(255,255,255,.4)}
+        .stat-line{width:30px;height:2px;background:var(--orange);margin:12px auto 0;border-radius:1px;transform:scaleX(0);transform-origin:left}
+
+        /* ═══ SERVICES ═══ */
+        .services{padding:140px 0;background:var(--g1);overflow:hidden}
+        .services-header{text-align:center;margin-bottom:60px}
+        .services-header .section-desc{max-width:520px;margin-left:auto;margin-right:auto}
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 20px 0; }
+        .svc-card{background:var(--white);border-radius:20px;padding:36px 28px;border:1px solid rgba(0,0,0,.04);transition:all .4s var(--ease);position:relative;overflow:hidden;cursor:pointer;height:100%}
+        .svc-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--orange);transform:scaleX(0);transition:transform .4s var(--ease)}
+        .svc-card:hover::before{transform:scaleX(1)}
+        .svc-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,.06)}
+        .svc-num{font-size:4rem;font-weight:900;color:var(--g1);line-height:1;margin-bottom:16px;transition:color .3s; position:absolute; top:20px; right:20px; z-index:0;}
+        .svc-card:hover .svc-num{color:var(--orange-l)}
+        .svc-icon{width:52px;height:52px;background:var(--orange-l);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;transition:all .3s var(--ease); position:relative; z-index:1;}
+        .svc-card:hover .svc-icon{background:var(--orange)}
+        .svc-icon i{font-size:1.1rem;color:var(--orange);transition:color .3s}
+        .svc-card:hover .svc-icon i{color:var(--white)}
+        .svc-card h3{font-size:1.05rem;font-weight:700;color:var(--dark);margin-bottom:10px; position:relative; z-index:1;}
+        .svc-card p{font-size:.85rem;color:var(--g5);line-height:1.6; position:relative; z-index:1;}
+
+        /* ═══ PORTFOLIO ═══ */
+        .portfolio{padding:120px 0 100px;overflow:hidden;background:var(--white)}
+        .portfolio-header{text-align:center;margin-bottom:50px}
+        .portfolio-header .section-desc{max-width:500px;margin-left:auto;margin-right:auto}
+        .swiper-portfolio{padding:30px 0 50px;overflow:visible!important}
+        .swiper-portfolio .swiper-slide{width:420px;border-radius:20px;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.08);transition:all .5s cubic-bezier(.4,0,.2,1)}
+        .swiper-portfolio .swiper-slide-active{box-shadow:0 20px 50px rgba(0,0,0,.15)}
+        .pf-card{position:relative;height:420px;overflow:hidden}
+        .pf-card img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+        .pf-card:hover img{transform:scale(1.06)}
+        .pf-card .pf-tag{display:none}
+        .pf-card .pf-info{position:absolute;bottom:0;left:0;right:0;padding:28px 24px 24px;background:linear-gradient(to top,rgba(0,0,0,.7) 0%,rgba(0,0,0,.3) 60%,transparent 100%);z-index:2}
+        .pf-card .pf-info h3{color:var(--white);font-size:1.15rem;font-weight:700;margin-bottom:4px}
+        .pf-card .pf-info p{color:rgba(255,255,255,.7);font-size:.82rem}
+        .portfolio-nav{display:flex;justify-content:center;gap:14px;margin-top:10px}
+        .portfolio-nav button{width:48px;height:48px;border-radius:50%;border:1.5px solid rgba(0,0,0,.1);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s var(--ease);color:var(--dark);font-size:.9rem}
+        .portfolio-nav button:hover{background:var(--orange);color:var(--white);border-color:var(--orange);transform:scale(1.1)}
+        .portfolio-cta{text-align:center;margin-top:40px}
+        .portfolio-cta .btn-outline{font-size:.82rem;letter-spacing:2px;text-transform:uppercase;gap:10px}
+
+        /* ═══ REFS ═══ */
+        .refs{padding:100px 0;background:var(--g1);overflow:hidden}
+        .refs-header{text-align:center;margin-bottom:50px}
+        .refs-wrap{position:relative}
+        .refs-wrap::before,.refs-wrap::after{content:'';position:absolute;top:0;bottom:0;width:100px;z-index:3;pointer-events:none}
+        .refs-wrap::before{left:0;background:linear-gradient(to right,var(--g1),transparent)}
+        .refs-wrap::after{right:0;background:linear-gradient(to left,var(--g1),transparent)}
+        .refs-track{display:flex;gap:20px;width:max-content;animation:refScroll 80s linear infinite}
+        .refs-track:hover{animation-play-state:paused}
+        @keyframes refScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+        .ref-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: var(--white);
+            padding: 24px 50px;
+            border-radius: 60px;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            color: var(--dark);
+            font-size: 1.35rem;
+            font-weight: 700;
+            font-family: 'Playfair Display', serif;
+            white-space: nowrap;
+            transition: all 0.4s var(--ease);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .ref-badge::before {
+            content: '';
+            position: absolute;
+            left: 0; bottom: 0;
+            height: 3px; width: 100%;
+            background: var(--orange);
+            transform: scaleX(0);
+            transition: transform 0.4s var(--ease);
+        }
+        .ref-badge i {
+            color: var(--orange);
+            font-size: 1.1rem;
+            opacity: 0.8;
+            transition: transform 0.4s var(--ease);
+        }
+        .ref-badge:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,107,53,0.3);
+            box-shadow: 0 12px 30px rgba(255,107,53,0.12);
+            color: var(--orange);
+        }
+        .ref-badge:hover::before {
+            transform: scaleX(1);
+        }
+        .ref-badge:hover i {
+            transform: rotate(360deg);
+            opacity: 1;
+        }
+
+        /* ═══ TESTIMONIALS ═══ */
+        .testimonials{padding:140px 0;overflow:hidden;background:var(--dark);}
+        .test-header{text-align:center;margin-bottom:50px;}
+        .test-header .section-title{color:var(--white);}
+        .test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .tc{background:#1a1a1a;border-radius:20px;padding:40px 32px;border:1px solid rgba(255,255,255,.05);transition:all .4s var(--ease)}
+        .tc:hover{transform:translateY(-8px);box-shadow:0 15px 35px rgba(0,0,0,.3);border-color:rgba(255,107,53,0.3);}
+        .tc .stars{color:var(--orange);font-size:.85rem;margin-bottom:20px;display:flex;gap:4px;}
+        .tc .quote{font-size:.95rem;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:30px;font-style:italic;}
+        .tc-author{display:flex;align-items:center;gap:16px;border-top:1px solid rgba(255,255,255,.05);padding-top:20px;}
+        .tc-avatar{width:48px;height:48px;border-radius:50%;background:rgba(255,107,53,0.1);color:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;border:1px solid rgba(255,107,53,0.2);}
+        .tc-name{font-weight:600;font-size:.95rem;color:var(--white);margin-bottom:2px;}
+        .tc-role{font-size:.75rem;color:rgba(255,255,255,0.5);}
+
+        /* ═══ CONTACT ═══ */
+        .contact{padding:140px 0;background:var(--g1);overflow:hidden}
+        .contact-grid{display:grid;grid-template-columns:5fr 7fr;gap:40px}
+        .contact-left h3{font-family:'Playfair Display',serif;font-size:2rem;color:var(--dark);margin-bottom:8px}
+        .contact-left>p{color:var(--g5);margin-bottom:32px;font-size:.92rem}
+        .ci{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid rgba(0,0,0,.05)}
+        .ci:last-of-type{border-bottom:none}
+        .ci .ci-icon{width:42px;height:42px;border-radius:12px;background:var(--orange-l);color:var(--orange);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.95rem}
+        .ci h4{font-size:.78rem;color:var(--dark);font-weight:600;margin-bottom:2px}
+        .ci p,.ci a{font-size:.85rem;color:var(--g5)}
+        .ci a:hover{color:var(--orange)}
+        .c-socials{display:flex;gap:10px;margin-top:24px}
+        .c-socials a{width:40px;height:40px;border-radius:10px;background:var(--white);border:1px solid rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center;color:var(--g7);transition:all .3s var(--ease)}
+        .c-socials a:hover{background:var(--orange);color:var(--white);border-color:var(--orange);transform:translateY(-3px)}
+        .contact-map{border-radius:20px;overflow:hidden;min-height:440px;box-shadow:0 6px 24px rgba(0,0,0,.05)}
+        .contact-map iframe{width:100%;height:100%;border:none}
+
+        /* ═══ FOOTER ═══ */
+        .footer{background:var(--dark);color:rgba(255,255,255,.6);padding:60px 0 24px}
+        .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:36px;margin-bottom:36px}
+        .footer h4{color:var(--white);font-size:.9rem;margin-bottom:16px}
+        .footer p,.footer li,.footer a{font-size:.82rem;line-height:1.7}
+        .footer ul{list-style:none}
+        .footer ul li{margin-bottom:5px}
+        .footer a:hover{color:var(--orange)}
+        .footer-logo{margin-bottom:16px;}
+        .footer-logo img{height:52px;max-width:160px;object-fit:contain;display:block;}
+        .footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);font-size:.78rem;flex-wrap:wrap;gap:12px;}
+        .footer-admin-link{display:inline-flex;align-items:center;gap:6px;color:rgba(255,255,255,0.45);text-decoration:none;font-size:0.76rem;padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.1);transition:all .3s ease;}
+        .footer-admin-link:hover{color:#ff6b35;border-color:#ff6b35;background:rgba(255,107,53,0.1);}
+        .footer-bottom{text-align:center;padding-top:20px;border-top:1px solid rgba(255,255,255,.06);font-size:.78rem}
+        .footer .fc{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:.82rem}
+        .footer .fc i{color:var(--orange);width:14px;font-size:.72rem}
+
+        .btt{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--dark);color:var(--white);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:all .3s;z-index:90}
+        .btt.show{opacity:1;visibility:visible}
+        .btt:hover{background:var(--orange);transform:translateY(-3px)}
+        .wa{position:fixed;bottom:24px;left:24px;width:50px;height:50px;border-radius:50%;background:#25d366;color:var(--white);display:flex;align-items:center;justify-content:center;font-size:1.4rem;z-index:90;box-shadow:0 4px 14px rgba(37,211,102,.3);transition:transform .3s}
+        .wa:hover{transform:scale(1.1)}
+        .mob-ov{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:99;display:none}
+        .mob-ov.active{display:block}
+
+        @media(max-width:1024px){
+            .hero-grid,.about-grid{grid-template-columns:1fr}
+            .hero-grid{text-align:center}.hero-desc{margin:0 auto 36px}.hero-btns{justify-content:center}
+            .hero-visual{margin-top:40px}
+            .float-card{display:none}
+            .stats-row{grid-template-columns:repeat(2,1fr)}
+            .pf-grid{grid-template-columns:1fr 1fr}
+            .pf1,.pf2{grid-column:span 1;height:320px}
+            .pf3,.pf4,.pf5{grid-column:span 1;height:260px}
+            .test-grid{grid-template-columns:1fr}
+            .contact-grid{grid-template-columns:1fr}
+            .footer-grid{grid-template-columns:repeat(2,1fr)}
+        }
+        @media(max-width:768px){
+            .hamburger{display:block}
+            .nav-links{position:fixed;top:0;right:-100%;width:75%;max-width:300px;height:100vh;background:var(--white);flex-direction:column;padding:90px 28px;gap:0;box-shadow:-4px 0 20px rgba(0,0,0,.05);transition:right .4s var(--ease);z-index:100}
+            .nav-links.open{right:0}
+            .nav-links li{border-bottom:1px solid var(--g1)}
+            .nav-links a{display:block;padding:14px 0;font-size:.95rem;color:var(--dark)!important;}
+            .hero h1{font-size:2.2rem}
+            .section-title{font-size:2rem}
+            .pf-header{flex-direction:column;align-items:flex-start;gap:14px}
+            .pf-grid{grid-template-columns:1fr}
+            .pf1,.pf2,.pf3,.pf4,.pf5{grid-column:span 1!important;height:250px!important}
+            .stats-row{grid-template-columns:1fr 1fr;gap:24px}
+            .footer-grid{grid-template-columns:1fr}
+        }
+    </style>
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <div class="loader-bar"><span id="loaderProgress"></span></div>
+        <div class="loader-text">GRAFİx AJANS</div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <div class="inner">
+                <a href="#" class="logo"><img src="images/grafix-logo.png" alt="Grafix Ajans"></a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#services">Hizmetlerimiz</a></li>
+                    <li><a href="#portfolio">Çalışmalarımız</a></li>
+                    <li><a href="#refs">Referanslarımız</a></li>
+                    <li><a href="#contact" class="nav-cta">İletişim</a></li>
+                </ul>
+                <button class="hamburger" id="hamburger" aria-label="Menü">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="mob-ov" id="mobOv"></div>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge"><span class="badge-dot"></span> 2005'ten Beri &bull; Reklam ve Dijital Baskı</div>
+                <h1>
+                    <span class="split-line"><span>Hayalinizdeki Tasarım</span></span><br>
+                    <span class="split-line"><span class="accent">Bizimle Gerçek Olsun</span></span>
+                </h1>
+                <p class="hero-desc">Profesyonel tasarım ve yenilikçi reklam çözümleriyle markanızı rakiplerinizden bir adım öne taşıyoruz.</p>
+                <div class="hero-btns">
+                    <a href="https://wa.me/905332517470" target="_blank" class="btn btn-primary"><i class="fab fa-whatsapp" style="font-size:1.2rem;"></i> Projenizi Başlatın</a>
+                    <a href="calismalarimiz.html" class="btn btn-outline-white"><i class="fas fa-images"></i> Çalışmalarımız</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-text">
+        <div class="track">
+            <div class="item"><span class="dot"></span>Tabela</div>
+            <div class="item"><span class="dot"></span>Dijital Baskı</div>
+            <div class="item"><span class="dot"></span>Araç Kaplama</div>
+            <div class="item"><span class="dot"></span>Kutu Harf</div>
+            <div class="item"><span class="dot"></span>Promosyon</div>
+            <div class="item"><span class="dot"></span>UV Baskı</div>
+            <div class="item"><span class="dot"></span>Totem</div>
+            <div class="item"><span class="dot"></span>Metal Markalama</div>
+            <div class="item"><span class="dot"></span>Tabela</div>
+            <div class="item"><span class="dot"></span>Dijital Baskı</div>
+            <div class="item"><span class="dot"></span>Araç Kaplama</div>
+            <div class="item"><span class="dot"></span>Kutu Harf</div>
+            <div class="item"><span class="dot"></span>Promosyon</div>
+            <div class="item"><span class="dot"></span>UV Baskı</div>
+            <div class="item"><span class="dot"></span>Totem</div>
+            <div class="item"><span class="dot"></span>Metal Markalama</div>
+        </div>
+    </div>
+
+    
+
+    
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <div class="container">
+            <div class="services-header">
+                <div class="section-label">Hizmetlerimiz</div>
+                <h2 class="section-title">Neler Yapıyoruz?</h2>
+                <p class="section-desc">Reklam ve tanıtım alanında geniş yelpazede profesyonel hizmet sunuyoruz.</p>
+            </div>
+            <div class="services-grid">
+                <div class="svc-card"><div class="svc-num">01</div><div class="svc-icon"><i class="fas fa-print"></i></div><h3>UV Baskı</h3><p>Yüksek kaliteli UV baskı ile iç ve dış mekan çözümleri.</p></div>
+                <div class="svc-card"><div class="svc-num">02</div><div class="svc-icon"><i class="fas fa-image"></i></div><h3>Dijital Baskı</h3><p>Büyük format dijital baskı, vinyl, branda ve folyo.</p></div>
+                <div class="svc-card"><div class="svc-num">03</div><div class="svc-icon"><i class="fas fa-lightbulb"></i></div><h3>Işıklı / Işıksız Tabela</h3><p>LED ışıklı tabelalar, dekupe tabela ve levhalar.</p></div>
+                <div class="svc-card"><div class="svc-num">04</div><div class="svc-icon"><i class="fas fa-gift"></i></div><h3>Promosyon</h3><p>Kurumsal ve kişiye özel promosyon ürünleri.</p></div>
+                <div class="svc-card"><div class="svc-num">05</div><div class="svc-icon"><i class="fas fa-monument"></i></div><h3>Totem</h3><p>LED ışıklı totemler ve yönlendirme totemleri.</p></div>
+                <div class="svc-card"><div class="svc-num">06</div><div class="svc-icon"><i class="fas fa-cube"></i></div><h3>Kutu Harf</h3><p>3D, ışıklı ve ışıksız kutu harf üretimi.</p></div>
+                <div class="svc-card"><div class="svc-num">07</div><div class="svc-icon"><i class="fas fa-car"></i></div><h3>Araç Kaplama</h3><p>Tam ve kısmi araç kaplama, giydirme hizmetleri.</p></div>
+                <div class="svc-card"><div class="svc-num">08</div><div class="svc-icon"><i class="fas fa-user-tie"></i></div><h3>Kişiye Özel Promosyon</h3><p>Kişiselleştirilmiş özel tasarım promosyon.</p></div>
+                <div class="svc-card"><div class="svc-num">09</div><div class="svc-icon"><i class="fas fa-industry"></i></div><h3>Metal Markalama</h3><p>Lazer ve kimyasal markalama çözümleri.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats" id="statsSection">
+        <div class="container">
+            <div class="stats-row">
+                <div class="stat"><div class="stat-num"><span class="counter" data-target="21">0</span><span class="suffix">+</span></div><div class="stat-label">Yıllık Tecrübe</div><div class="stat-line"></div></div>
+                <div class="stat"><div class="stat-num"><span class="counter" data-target="200">0</span><span class="suffix">+</span></div><div class="stat-label">Tamamlanan Proje</div><div class="stat-line"></div></div>
+                <div class="stat"><div class="stat-num"><span class="counter" data-target="150">0</span><span class="suffix">+</span></div><div class="stat-label">Mutlu Müşteri</div><div class="stat-line"></div></div>
+                <div class="stat"><div class="stat-num"><span class="counter" data-target="9">0</span></div><div class="stat-label">Hizmet Alanı</div><div class="stat-line"></div></div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- PORTFOLIO -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="portfolio-header">
+                <div class="section-label">Keşfet</div>
+                <h2 class="section-title">Projeler</h2>
+                <p class="section-desc">Her kare farklı bir markanın hikâyesi. Öne çıkan işe dokun, projeyi tüm detaylarıyla keşfet.</p>
+            </div>
+        </div>
+        <div class="swiper swiper-portfolio">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=lumiki">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/lumiki (3).jpeg" alt="Lumiki Oyun/Cafe" loading="lazy">
+                            <div class="pf-info"><h3>Lumiki Oyun/Cafe</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=bozzade">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/bozzade.jpg" alt="Bozzade Künefe" loading="lazy">
+                            <div class="pf-info"><h3>Bozzade Künefe</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=tarcanlar">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/tarcanlar.jpeg" alt="Tarcanlar Tuning Oto Ekspertiz" loading="lazy">
+                            <div class="pf-info"><h3>Tarcanlar Tuning Oto Ekspertiz</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=neva">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/nevagece1.jpeg" alt="Neva Mimarlık" loading="lazy">
+                            <div class="pf-info"><h3>Neva Mimarlık</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=millet">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/millet (5).jpeg" alt="Evrenli Millet Bahçesi" loading="lazy">
+                            <div class="pf-info"><h3>Evrenli Millet Bahçesi</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=vizyon">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/vizyon (5).jpeg" alt="Vizyon Akademi" loading="lazy">
+                            <div class="pf-info"><h3>Vizyon Akademi</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=zümrüt">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/z%C3%BCmr%C3%BCt%20(5).jpeg" alt="Zümrüt Kuyumculuk" loading="lazy">
+                            <div class="pf-info"><h3>Zümrüt Kuyumculuk</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=meyhane">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/meyhane3.jpeg" alt="Eski Usul Meyhanesi" loading="lazy">
+                            <div class="pf-info"><h3>Eski Usul Meyhanesi</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=pizza">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/pizza%20(2).jpeg" alt="Pizza Nepoletana" loading="lazy">
+                            <div class="pf-info"><h3>Pizza Nepoletana</h3></div>
+                        </div>
+                    </a>
+                </div>
+                <div class="swiper-slide">
+                    <a href="project-detail.html?project=iskur">
+                        <div class="pf-card">
+                            <img src="images/%C3%87ALI%C5%9EMALARIM/i%C5%9Fkur1.jpeg" alt="İŞKUR UŞAK" loading="eager">
+                            <div class="pf-info"><h3>İŞKUR UŞAK</h3></div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="portfolio-nav">
+            <button class="pf-prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="pf-next"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="portfolio-cta">
+            <a href="calismalarimiz.html" class="btn btn-outline">Tüm Projeler <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- REFS -->
+    <section class="refs" id="refs">
+        <div class="container"><div class="refs-header"><div class="section-label">Referanslarımız</div><h2 class="section-title">Güvenle Çalıştığımız Markalar</h2></div></div>
+        <div class="refs-wrap">
+            <div class="refs-track">
+                <!-- Group 1 -->
+                
+    <div class="ref-badge"><i class="fas fa-star"></i> Bozzade Künefe</div>
+        <div class="ref-badge"><i class="fas fa-star"></i> AKP Uşak İl Başkanlığı</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Pınar Yapı</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Özel Kırmızı Bahçe Anaokulu</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> Evrenli Millet Bahçesi</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Beyaz Mutfak</div>
+                            <div class="ref-badge"><i class="fas fa-star"></i> Varol Et</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Erdil Restaurant</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Gülbeyaz Uysal Beauty Salon</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> İşkur Uşak</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> John Flippo</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Bey Kebap</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Final Oto Ford Özel Servisi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Kudra Güzellik Merkezi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Birevim</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Harika Çocuklar Anaokulu</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Öztaş Petrol</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Nene Home</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> AHK Mimarlık Ofisi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Murat Bey</div>
+        <div class="ref-badge"><i class="fas fa-star"></i> Neva Mimarlık</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Turk Telekom</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Tarcanlar Tuning Oto Ekspertiz</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> zümrüt Kuyumculuk</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Eski Usul Meyhanesi</div> 
+                            <div class="ref-badge"><i class="fas fa-star"></i> Pizza Napoletana</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Lumiki Oyun/Cafe</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Zümrüt Kuyumculuk</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> Vizyon Akademi</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> Mobilyacım Uşak</div>
+        <div class="ref-badge"><i class="fas fa-star"></i> Neva Yapı</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Nihat Dülgeroğlu İlkokulu</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Uşak Borsa İstanbul Ortaokulu</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> Omnikel Isı ve Enerji Sistemleri</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Palmira Mobilya</div>
+                            <div class="ref-badge"><i class="fas fa-star"></i> Sigortam64</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Şehit Mehmet Çetin İmam Hatip Ortaokulu</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Tarcanlar Oto Ekspertiz</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> Tchibo</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> Tugva</div>
+                                                <div class="ref-badge"><i class="fas fa-star"></i> Turkcell</div>
+                                                    <div class="ref-badge"><i class="fas fa-star"></i> Uzman Sigorta</div>
+                                                        <div class="ref-badge"><i class="fas fa-star"></i> Vrl Mobilya</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Soylu İnşaat</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Çevsa</div>
+
+                <!-- Group 2 (for seamless loop) -->
+                
+    <div class="ref-badge"><i class="fas fa-star"></i> Bozzade Künefe</div>
+        <div class="ref-badge"><i class="fas fa-star"></i> AKP Uşak İl Başkanlığı</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Pınar Yapı</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Özel Kırmızı Bahçe Anaokulu</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> Evrenli Millet Bahçesi</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Beyaz Mutfak</div>
+                            <div class="ref-badge"><i class="fas fa-star"></i> Varol Et</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Erdil Restaurant</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Gülbeyaz Uysal Beauty Salon</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> İşkur Uşak</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> John Flippo</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Bey Kebap</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Final Oto Ford Özel Servisi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Kudra Güzellik Merkezi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Birevim</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Harika Çocuklar Anaokulu</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Öztaş Petrol</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Nene Home</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> AHK Mimarlık Ofisi</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Murat Bey</div>
+               <div class="ref-badge"><i class="fas fa-star"></i> Neva Mimarlık</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Turk Telekom</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Tarcanlar Tuning Oto Ekspertiz</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> zümrüt Kuyumculuk</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Eski Usul Meyhanesi</div> 
+                            <div class="ref-badge"><i class="fas fa-star"></i> Pizza Napoletana</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Lumiki Oyun/Cafe</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Zümrüt Kuyumculuk</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> Vizyon Akademi</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> Mobilyacım Uşak</div>
+            <div class="ref-badge"><i class="fas fa-star"></i> Nihat Dülgeroğlu İlkokulu</div>
+                <div class="ref-badge"><i class="fas fa-star"></i> Uşak Borsa İstanbul Ortaokulu</div>
+                    <div class="ref-badge"><i class="fas fa-star"></i> Omnikel Isı ve Enerji Sistemleri</div>
+                        <div class="ref-badge"><i class="fas fa-star"></i> Palmira Mobilya</div>
+                            <div class="ref-badge"><i class="fas fa-star"></i> Sigortam64</div>
+                                <div class="ref-badge"><i class="fas fa-star"></i> Şehit Mehmet Çetin İmam Hatip Ortaokulu</div>
+                                    <div class="ref-badge"><i class="fas fa-star"></i> Tarcanlar Oto Ekspertiz</div>
+                                        <div class="ref-badge"><i class="fas fa-star"></i> Tchibo</div>
+                                            <div class="ref-badge"><i class="fas fa-star"></i> Tugva</div>
+                                                <div class="ref-badge"><i class="fas fa-star"></i> Turkcell</div>
+                                                    <div class="ref-badge"><i class="fas fa-star"></i> Uzman Sigorta</div>
+                                                        <div class="ref-badge"><i class="fas fa-star"></i> Vrl Mobilya</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Soylu İnşaat</div>
+    <div class="ref-badge"><i class="fas fa-star"></i> Çevsa</div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="test-header"><div class="section-label">Müşteri Yorumları</div><h2 class="section-title">Ne Dediler?</h2></div>
+            <div class="test-grid">
+                <div class="tc"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Reklam ve tasarım noktasında her daim çalıştığım ve gerek kalite gerekse fiyat politikası ile işletmemizin yanında olan Ahmet Bey'e teşekkür ederim."</p><div class="tc-author"><div class="tc-avatar">TE</div><div><div class="tc-name">Turgay Eser</div><div class="tc-role">İşletme Sahibi</div></div></div></div>
+                <div class="tc"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Uşak Şans Organizasyon ailesi olarak Grafix Ajans ile çalışmaktan gurur duyuyoruz. Emeklerinize sağlık!"</p><div class="tc-author"><div class="tc-avatar">İÇ</div><div><div class="tc-name">İpek Çatmadım</div><div class="tc-role">Şans Organizasyon</div></div></div></div>
+                <div class="tc"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="quote">"Profesyonel yaklaşımları ve kaliteli işçilikleri ile her zaman memnun kaldık. Kesinlikle tavsiye ediyorum."</p><div class="tc-author"><div class="tc-avatar">AY</div><div><div class="tc-name">Ahmet Yılmaz</div><div class="tc-role">İşletme Sahibi</div></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-left">
+                    <div class="section-label">İletişim</div>
+                    <h3>Haydi Konuşalım</h3>
+                    <p>Projeleriniz için en uygun çözümleri birlikte bulalım.</p>
+                    <div class="ci"><div class="ci-icon"><i class="fas fa-map-marker-alt"></i></div><div><h4>ADRES</h4><p>Sarayaltı, Celal Bayar Cd. no:84 iç kapı No:10, 64100 Merkez/Uşak</p></div></div>
+                    <div class="ci"><div class="ci-icon"><i class="fas fa-phone"></i></div><div><h4>TELEFON</h4><a href="tel:05332517470">0533 251 74 70</a></div></div>
+                    <div class="ci"><div class="ci-icon"><i class="fas fa-envelope"></i></div><div><h4>E-POSTA</h4><a href="mailto:usakgrafiksajans@gmail.com">usakgrafiksajans@gmail.com</a></div></div>
+                    <div class="ci"><div class="ci-icon"><i class="fas fa-clock"></i></div><div><h4>ÇALIŞMA SAATLERİ</h4><p>Pazartesi - Pazar: 09:00 - 18:00</p></div></div>
+                    <div class="c-socials">
+                        <a href="https://www.instagram.com/grafix.ajans64/" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/905332517470" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a href="mailto:usakgrafiksajans@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+                <div class="contact-map">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3117.5!2d29.4055!3d38.6737!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14c94f9f58a0a3d5%3A0x9f5e9a0e2c0d0a0a!2sCelal%20Bayar%20Cd.%2C%2064100%20Merkez%2FU%C5%9Fak!5e0!3m2!1str!2str!4v1690000000000" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div><div class="footer-logo"><img src="images/grafix-logo.png" alt="Grafix Ajans"></div><p>Profesyonel reklam çözümleri ile markanızı öne çıkarıyoruz. 2005'ten beri Uşak'ta güvenilir hizmet.</p></div>
+                <div><h4>Sayfalar</h4><ul><li><a href="#home">Anasayfa</a></li><li><a href="#services">Hizmetlerimiz</a></li><li><a href="calismalarimiz.html">Çalışmalarımız</a></li><li><a href="#contact">İletişim</a></li></ul></div>
+                <div><h4>Hizmetler</h4><ul><li>Tabela</li><li>Dijital Baskı</li><li>Araç Kaplama</li><li>Kutu Harf</li><li>Totem</li><li>Promosyon</li></ul></div>
+                <div><h4>İletişim</h4><div class="fc"><i class="fas fa-map-marker-alt"></i> Celal Bayar Cd. no:84, Uşak</div><div class="fc"><i class="fas fa-phone"></i> 0533 251 74 70</div><div class="fc"><i class="fas fa-envelope"></i> usakgrafiksajans@gmail.com</div><div class="fc"><i class="fab fa-instagram"></i> <a href="https://www.instagram.com/grafix.ajans64/" target="_blank">@grafix.ajans64</a></div></div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 GRAFİx AJANS. Tüm hakları saklıdır.</span>
+                <a href="admin.html" class="footer-admin-link" title="Yönetici Paneli">
+                    <i class="fas fa-lock"></i> Yönetici Girişi
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <button class="btt" id="btt"><i class="fas fa-arrow-up"></i></button>
+    <a href="https://wa.me/905332517470" class="wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+    <script>
+    // ═══════════════════════════════════════
+    // GSAP REGISTER
+    // ═══════════════════════════════════════
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ═══ LENIS SMOOTH SCROLL ═══
+    const lenis = new Lenis({ duration: 1.2, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+    requestAnimationFrame(raf);
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+
+    // ═══ PRELOADER ═══
+    const bar = document.getElementById('loaderProgress');
+    let prog = 0;
+    const loadInterval = setInterval(() => {
+        prog += Math.random() * 25;
+        if (prog > 100) prog = 100;
+        bar.style.width = prog + '%';
+        if (prog >= 100) {
+            clearInterval(loadInterval);
+            setTimeout(() => {
+                gsap.to('#preloader', {
+                    yPercent: -100,
+                    duration: .8,
+                    ease: 'power3.inOut',
+                    onComplete: () => {
+                        document.getElementById('preloader').style.display = 'none';
+                        animateHero();
+                    }
+                });
+            }, 300);
+        }
+    }, 100);
+
+    // ═══ HERO ANIMATION SEQUENCE ═══
+    function animateHero() {
+        const tl = gsap.timeline();
+
+        // Split text reveal - each word slides up
+        tl.to('.split-line span', {
+            y: 0,
+            duration: 1,
+            stagger: 0.15,
+            ease: 'power4.out'
+        });
+
+        // Description
+        tl.to('.hero-desc', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
+
+        // Buttons
+        tl.to('.hero-btns', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6');
+    }
+
+    // ═══ STATS ANIMATIONS ═══
+    let counted = false;
+    ScrollTrigger.create({
+        trigger: '.stats',
+        start: 'top 75%',
+        onEnter: () => {
+            if (counted) return;
+            counted = true;
+
+            // Counter animation
+            document.querySelectorAll('.counter').forEach(el => {
+                const target = +el.dataset.target;
+                gsap.to(el, {
+                    innerText: target,
+                    duration: 2,
+                    snap: { innerText: 1 },
+                    ease: 'power2.out'
+                });
+            });
+
+            // About badge counter
+            const abNum = document.querySelector('.ab-num');
+            if (abNum) {
+                gsap.to(abNum, {
+                    innerText: +abNum.dataset.target,
+                    duration: 2,
+                    snap: { innerText: 1 },
+                    ease: 'power2.out'
+                });
+            }
+
+            // Stat items stagger
+            gsap.from('.stat', {
+                y: 40,
+                opacity: 0,
+                duration: .7,
+                stagger: .15,
+                ease: 'power3.out'
+            });
+
+            // Stat lines
+            gsap.to('.stat-line', {
+                scaleX: 1,
+                duration: .8,
+                stagger: .15,
+                delay: .5,
+                ease: 'power3.out'
+            });
+        }
+    });
+
+    // ═══ SERVICES SECTION ═══
+    gsap.from('.services-header > *', {
+        y: 40,
+        opacity: 0,
+        duration: .7,
+        stagger: .12,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.services-header', start: 'top 80%' }
+    });
+
+    
+
+    // ═══ PORTFOLIO ═══
+
+    gsap.utils.toArray('.svc-card').forEach((card, i) => {
+        gsap.from(card, {
+            y: 40,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+            }
+        });
+    });
+
+    const portfolioSwiper = new Swiper('.swiper-portfolio', {
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        loop: true,
+        initialSlide: 6,
+        speed: 600,
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 60,
+            depth: 200,
+            modifier: 1,
+            slideShadows: false
+        },
+        navigation: {
+            nextEl: '.pf-next',
+            prevEl: '.pf-prev'
+        },
+        breakpoints: {
+            320: { coverflowEffect: { stretch: 20, depth: 150 } },
+            768: { coverflowEffect: { stretch: 40, depth: 180 } },
+            1024: { coverflowEffect: { stretch: 60, depth: 200 } }
+        }
+    });
+
+    gsap.from('.portfolio-header > *', {
+        y: 30,
+        opacity: 0,
+        duration: .7,
+        stagger: .1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.portfolio-header', start: 'top 80%' }
+    });
+
+    gsap.from('.swiper-portfolio', {
+        y: 60,
+        opacity: 0,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.swiper-portfolio', start: 'top 85%' }
+    });
+
+    // ═══ REFS ═══
+    gsap.from('.refs-header > *', {
+        y: 30,
+        opacity: 0,
+        duration: .7,
+        stagger: .1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.refs-header', start: 'top 80%' }
+    });
+
+    // ═══ TESTIMONIALS ═══
+    gsap.from('.test-header > *', {
+        y: 30,
+        opacity: 0,
+        duration: .7,
+        stagger: .1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.test-header', start: 'top 80%' }
+    });
+
+    gsap.utils.toArray('.tc').forEach((card, i) => {
+        gsap.from(card, {
+            y: 40,
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: card,
+                start: 'top 90%',
+                toggleActions: 'play none none none'
+            }
+        });
+    });
+
+    // ═══ CONTACT ═══
+    gsap.from('.contact-left > *', {
+        y: 30,
+        opacity: 0,
+        duration: .6,
+        stagger: .1,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.contact-left', start: 'top 75%' }
+    });
+
+    gsap.from('.contact-map', {
+        x: 60,
+        opacity: 0,
+        duration: .8,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: '.contact-map', start: 'top 75%' }
+    });
+
+    // ═══ HEADER ═══
+    window.addEventListener('scroll', () => {
+        document.getElementById('header').classList.toggle('scrolled', scrollY > 60);
+        document.getElementById('btt').classList.toggle('show', scrollY > 500);
+    });
+
+    // ═══ MOBILE MENU ═══
+    const hb = document.getElementById('hamburger');
+    const nl = document.getElementById('navLinks');
+    const mo = document.getElementById('mobOv');
+    function closeM() { hb.classList.remove('active'); nl.classList.remove('open'); mo.classList.remove('active'); }
+    hb.addEventListener('click', () => { hb.classList.toggle('active'); nl.classList.toggle('open'); mo.classList.toggle('active'); });
+    mo.addEventListener('click', closeM);
+    nl.querySelectorAll('a').forEach(a => a.addEventListener('click', closeM));
+
+    // ═══ SMOOTH SCROLL ═══
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            e.preventDefault();
+            const t = document.querySelector(a.getAttribute('href'));
+            if (t) lenis.scrollTo(t, { offset: -80 });
+        });
+    });
+
+    // ═══ BACK TO TOP ═══
+    document.getElementById('btt').addEventListener('click', () => lenis.scrollTo(0));
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    <script>
+        lightbox.option({ 'resizeDuration': 200, 'wrapAround': true, 'alwaysShowNavOnTouchDevices': true });
+    </script>
+</body>
+</html>
