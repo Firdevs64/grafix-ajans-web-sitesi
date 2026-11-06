@@ -118,23 +118,8 @@ Projeyi bilgisayarınızda çalıştırmak için herhangi bir ekstra paket yöne
 
 ---
 
-## 🚀 Netlify Üzerinden Canlıya Alma
-
-Proje Netlify ile tam entegre çalışacak şekilde tasarlanmıştır:
-
-1. **GitHub Bağlantısı ile (Otomatik):**
-   - [app.netlify.com](https://app.netlify.com) adresine giriş yapın.
-   - **"Add new site" > "Import an existing project"** seçeneğini seçin.
-   - `Firdevs64/grafix-ajans-web-sitesi` reposunu bağlayın.
-   - Build ayarı gerekmez (statik HTML); **"Deploy site"** butonuna basmanız yeterlidir. Her git push işleminde siteniz otomatik güncellenir.
-
-2. **Manuel Sürükle & Bırak ile (Netlify Drop):**
-   - Netlify panelinizde sitenizin **"Deploys"** sekmesine gelin.
-   - Proje klasörünü ilgili alana sürükleyip bırakarak 10 saniyede güncelleyebilirsiniz.
-
----
 
 ## 📄 Lisans & Telif Hakkı
 
-© 2026 **Grafix Ajans**. Tüm hakları saklıdır.  
+© 2025 **Grafix Ajans**. Tüm hakları saklıdır.  
 Görseller ve marka varlıkları Grafix Ajans'a aittir.
