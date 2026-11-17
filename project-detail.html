@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proje Detayı | Grafix Ajans</title>
-    <meta name="description" content="Grafix Ajans proje detay sayfası. Ürün, çalışma ve üretim aşamalarını inceleyin.">
+    <meta name="description" content="Uşak reklam ajansı Grafix Ajans'ın öne çıkan projelerini, çalışma görsellerini ve üretim aşamalarını inceleyin.">
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="Grafix Ajans">
+    <meta property="og:title" content="Proje Detayı | Grafix Ajans">
+    <meta property="og:description" content="Grafix Ajans'ın öne çıkan reklam ve tasarım projeleri.">
+    <meta property="og:image" content="https://grafixajans.netlify.app/images/grafix-logo.png">
+    <meta property="og:url" content="https://grafixajans.netlify.app/project-detail.html">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -714,7 +722,9 @@
 
         const params = new URLSearchParams(window.location.search);
         const slug = params.get('project') || 'tarcanlar';
-        const project = projects[slug] || projects.tarcanlar;
+        const canonicalSlug = Object.prototype.hasOwnProperty.call(projects, slug)
+            ? (slug === 'eskiusul' ? 'meyhane' : slug) : 'tarcanlar';
+        const project = projects[canonicalSlug];
 
         document.getElementById('projectTitle').textContent = project.title;
         document.getElementById('projectCategory').textContent = project.category;
@@ -798,7 +808,38 @@
             if (event.target === lightbox) closeLightbox();
         });
 
-        document.title = `${project.title} | Grafix Ajans`;
+        // Projeye özel SEO bilgileri (görünür tasarımı değiştirmez).
+        const seoUrl = `https://grafixajans.netlify.app/project-detail.html?project=${encodeURIComponent(canonicalSlug)}`;
+        const seoTitle = `${project.title} Projesi | Grafix Ajans Uşak`;
+        const seoDescription = `Uşak merkezli Grafix Ajans'ın ${project.title} projesini inceleyin. ${project.category} alanındaki çalışma görsellerini keşfedin.`;
+        const seoImageItem = project.galleryGroups.flatMap(group => group.items).find(item => item.type === 'image');
+        const seoImage = new URL(seoImageItem ? seoImageItem.src : 'images/grafix-logo.png', 'https://grafixajans.netlify.app/').href;
+
+        document.title = seoTitle;
+        document.querySelector('meta[name="description"]').content = seoDescription;
+        document.querySelector('meta[property="og:title"]').content = seoTitle;
+        document.querySelector('meta[property="og:description"]').content = seoDescription;
+        document.querySelector('meta[property="og:image"]').content = seoImage;
+        document.querySelector('meta[property="og:url"]').content = seoUrl;
+
+        const canonical = document.createElement('link');
+        canonical.rel = 'canonical';
+        canonical.href = seoUrl;
+        document.head.appendChild(canonical);
+
+        const schema = document.createElement('script');
+        schema.type = 'application/ld+json';
+        schema.textContent = JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: seoTitle,
+            description: seoDescription,
+            url: seoUrl,
+            inLanguage: 'tr',
+            primaryImageOfPage: { '@type': 'ImageObject', url: seoImage },
+            isPartOf: { '@type': 'WebSite', name: 'Grafix Ajans', url: 'https://grafixajans.netlify.app/' }
+        });
+        document.head.appendChild(schema);
     </script>
 </body>
 </html>
